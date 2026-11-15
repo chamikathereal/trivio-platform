@@ -162,7 +162,16 @@ console.log(result);
 
 ---
 
-## 7. Negative Net Settlement Handling
+## 7. Historical Auditability & Snapshot Persistence
+
+Every calculation result exposes `result.appliedRule.snapshot` (`AppliedRuleSnapshot`), containing the exact applied MDR basis points, fixed fee, minimum/maximum thresholds, tax adjustments, and calculation policy.
+
+- **Process Memory Protection:** The snapshot and ledger breakdown objects are deeply frozen at runtime using `Object.freeze()` to prevent in-memory mutation.
+- **Developer Database Responsibility:** In-memory runtime freezing ensures application process safety, but does not provide permanent persistence or database immutability. Developers and system architects must store these calculation snapshots in their own database ledgers (e.g. PostgreSQL audit tables with append-only permissions) to maintain historical audit fidelity across system lifecycles.
+
+---
+
+## 8. Negative Net Settlement Handling
 
 If fixed charges or minimums exceed the gross transaction amount (e.g. gross 10.00 with a 15.00 fixed fee):
 - **Default Policy:** Throws `NegativeNetSettlementError` to prevent silent merchant loss.

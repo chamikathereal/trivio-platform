@@ -59,8 +59,14 @@ export interface FeeBreakdownDetails {
 
 /**
  * Self-contained immutable snapshot of the matched rule parameters at evaluation time.
+ * Protected at runtime via recursive Object.freeze() to prevent in-memory tampering.
  * Enables developers to persist and verify historical calculation fidelity in their own
  * database ledgers even if fee rules are modified, replaced, or deleted in the future.
+ *
+ * NOTE: In-memory runtime freezing ensures process execution safety, but does not provide
+ * permanent persistence or database immutability. Developers and system architects must store
+ * these snapshots in their own immutable database ledgers (e.g. PostgreSQL audit tables with
+ * append-only permissions) to guarantee historical audit fidelity across system lifecycles.
  */
 export interface AppliedRuleSnapshot {
   id: string;

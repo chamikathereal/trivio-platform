@@ -116,6 +116,45 @@ export function isRuleEligible(rule: NormalizedFeeRule, tx: NormalizedTransactio
 }
 
 /**
+ * Determines whether two normalized rules represent the exact same rule definition.
+ *
+ * Checks identifiers, version, acquirer, currency, scope conditions, and fee structures.
+ * Rules that match all fields are true duplicates and can be safely deduplicated.
+ * Rules that differ in version, fee terms, or scope but share priority and specificity
+ * represent ambiguous or conflicting agreements and must not be silently deduplicated.
+ */
+export function areRulesIdentical(a: NormalizedFeeRule, b: NormalizedFeeRule): boolean {
+  if (a.id !== b.id) return false;
+  if (String(a.version) !== String(b.version)) return false;
+  if (a.acquirerId !== b.acquirerId) return false;
+  if ((a.currency ?? '') !== (b.currency ?? '')) return false;
+  if ((a.merchantId ?? '') !== (b.merchantId ?? '')) return false;
+  if ((a.terminalId ?? '') !== (b.terminalId ?? '')) return false;
+  if ((a.cardScheme ?? '').toLowerCase() !== (b.cardScheme ?? '').toLowerCase()) return false;
+  if ((a.cardFundingType ?? '').toLowerCase() !== (b.cardFundingType ?? '').toLowerCase()) return false;
+  if ((a.cardRegion ?? '').toLowerCase() !== (b.cardRegion ?? '').toLowerCase()) return false;
+
+  // Fee structure comparison
+  const afs = a.feeStructure;
+  const bfs = b.feeStructure;
+  if (afs.rateBasisPoints !== bfs.rateBasisPoints) return false;
+  if ((afs.fixedFeeMinor ?? 0) !== (bfs.fixedFeeMinor ?? 0)) return false;
+  if ((afs.minFeeMinor ?? null) !== (bfs.minFeeMinor ?? null)) return false;
+  if ((afs.maxFeeMinor ?? null) !== (bfs.maxFeeMinor ?? null)) return false;
+
+  const aTax = afs.taxAdjustment;
+  const bTax = bfs.taxAdjustment;
+  if (Boolean(aTax) !== Boolean(bTax)) return false;
+  if (aTax && bTax) {
+    if ((aTax.rateBasisPoints ?? 0) !== (bTax.rateBasisPoints ?? 0)) return false;
+    if ((aTax.fixedMinor ?? 0) !== (bTax.fixedMinor ?? 0)) return false;
+    if ((aTax.name ?? '') !== (bTax.name ?? '')) return false;
+  }
+
+  return true;
+}
+
+/**
  * Selects the single most specific, highest-priority matching fee rule for a transaction.
  *
  * @param rules - List of candidate normalized fee rules.
@@ -150,10 +189,11 @@ export function findMatchingRule(
     );
   }
 
-  // Sort candidates:
+  // Sort candidates deterministically:
   // 1. Highest priority first
   // 2. Highest specificity first
-  // 3. Deterministic tie-breaker by rule ID (guarantees identical result regardless of input array order)
+  // 3. Rule ID alphabetical asc
+  // 4. Version string asc
   eligibleCandidates.sort((a, b) => {
     if (b.rule.priority !== a.rule.priority) {
       return b.rule.priority - a.rule.priority;
@@ -161,31 +201,36 @@ export function findMatchingRule(
     if (b.specificityScore !== a.specificityScore) {
       return b.specificityScore - a.specificityScore;
     }
-    return a.rule.id.localeCompare(b.rule.id);
+    const idCmp = a.rule.id.localeCompare(b.rule.id);
+    if (idCmp !== 0) return idCmp;
+    return String(a.rule.version).localeCompare(String(b.rule.version));
   });
 
   const best = eligibleCandidates[0]!;
 
   // Conflict detection:
-  // Check if any distinct rule has the EXACT same priority and specificity.
-  // In financial settlement systems, choosing arbitrarily between different agreement rules with distinct IDs
-  // (even if fee structures are currently equivalent) produces misleading contract attribution.
-  // Therefore, distinct rule agreements that tie in priority and specificity are strictly rejected.
+  // Check if any other eligible candidate ties with 'best' in priority and specificity.
+  // Unless the candidate is an exact duplicate of 'best' (identical ID, version, conditions, and fee structure),
+  // it represents an ambiguous configuration or conflicting agreement and MUST be rejected.
   const conflicting = eligibleCandidates.filter(
     (c) =>
       c !== best &&
       c.rule.priority === best.rule.priority &&
       c.specificityScore === best.specificityScore &&
-      c.rule.id !== best.rule.id
+      !areRulesIdentical(c.rule, best.rule)
   );
 
   if (conflicting.length > 0) {
-    const allConflictingIds = [best.rule.id, ...conflicting.map((c) => c.rule.id)];
+    const allConflictingDescriptors = [
+      `${best.rule.id} (v${best.rule.version})`,
+      ...conflicting.map((c) => `${c.rule.id} (v${c.rule.version})`),
+    ];
+    const uniqueIds = Array.from(new Set([best.rule.id, ...conflicting.map((c) => c.rule.id)]));
     throw new RuleConflictError(
-      `Found ${allConflictingIds.length} conflicting fee rules with identical priority (${best.rule.priority}) ` +
-      `and specificity score (${best.specificityScore}): [${allConflictingIds.join(', ')}]. ` +
-      `Configure explicit rule priorities or non-overlapping date ranges to resolve ambiguity.`,
-      allConflictingIds
+      `Found ${allConflictingDescriptors.length} conflicting fee rules with identical priority (${best.rule.priority}) ` +
+      `and specificity score (${best.specificityScore}): [${allConflictingDescriptors.join(', ')}]. ` +
+      `Configure explicit rule priorities, distinct version active dates, or non-overlapping ranges to resolve ambiguity.`,
+      uniqueIds
     );
   }
 
