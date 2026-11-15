@@ -48,11 +48,8 @@ Trivio employs a multi-project monorepo hosting architecture on Vercel. Both app
    - **Framework Preset:** `Next.js`
    - **Root Directory:** Click *Edit* and select `apps/web`.
    - **Include files outside root directory in the Build Step:** Keep **Checked** (ensures `@trivio.ink/core` is resolved from the monorepo root).
-   - **Build Command:** Override or leave default:
-     ```bash
-     next build
-     ```
-     *(Vercel automatically detects the root `package-lock.json` and runs `npm install` from the monorepo root).*
+   - **Build Command:** Leave Default (Toggle OFF).
+     *(Trivio's `prebuild` script automatically compiles `@trivio.ink/core`, `@trivio.ink/node`, and `@trivio.ink/react` prior to `next build`, ensuring that compiled `dist` files are available in a clean clone).*
    - **Output Directory:** Default (`.next`).
    - **Install Command:** Default (`npm install`).
 5. Click **Deploy**.
