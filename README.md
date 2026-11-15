@@ -137,8 +137,9 @@ console.log(result);
 | **Stage 3A** | **Completed** | Server-side Node.js developer SDK foundation in `@trivio.ink/node` (PR #11) |
 | **Stage 3B** | **Completed** | Reusable React hooks & settlement UI components in `@trivio.ink/react` (PR #12, PR #13) |
 | **Stage 3C-A** | **Completed** | Independent package packaging acceptance, whitelists, and versioning standards (PR #14) |
-| **Stage 3C-B1** | **In Progress** | Formal corporate Apache-2.0 licensing under `trivio.ink` and distribution governance |
-| **Stage 3C-B2** | *Planned* | npm registry organization verification and controlled public publication |
+| **Stage 3C-B1** | **Completed** | Formal corporate Apache-2.0 licensing under `trivio.ink` and distribution governance (PR #15) |
+| **Stage 3C-B2** | **Completed** | npm organization scope verification & release security governance |
+| **Stage 3C-B3** | *Planned* | First controlled public npm publication (`v0.1.0`) upon explicit owner authorization |
 | **Stage 4** | *Planned* | Next.js merchant console, documentation portal, and marketing site |
 | **Stage 5** | *Planned* | NestJS hosted cloud API with PostgreSQL/Prisma persistence & automated reconciliation |
 

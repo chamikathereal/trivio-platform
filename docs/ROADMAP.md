@@ -150,15 +150,29 @@
 
 ---
 
-## Stage 3C-B2: npm Organization Scope Verification & Controlled Publication (Next)
+## Stage 3C-B2: npm Organization Verification & Release Security Governance (Completed)
 
-**Goal:** Verify `@trivio.ink` scope ownership on npmjs.com, configure 2FA and publishing permissions, and execute owner-authorized initial publication (`v0.1.0`).
+**Goal:** Verify `@trivio.ink` scope ownership on npmjs.com, confirm package name availability, establish release runbook and security protocols, and prepare formal authorization report without publishing.
 
-- [ ] Project owner verifies control of `@trivio.ink` scope on npmjs.com
-- [ ] Account security verification (2FA, organization publishing permissions)
-- [ ] Pre-release legal entity name verification against company registration
-- [ ] Removal of `"private": true` publication guard upon explicit authorization
-- [ ] Initial publication of `@trivio.ink/core@0.1.0`, `@trivio.ink/node@0.1.0`, `@trivio.ink/react@0.1.0`
+- [x] Project owner verified control of `trivio.ink` organization on npmjs.com (`https://www.npmjs.com/settings/trivio.ink/packages`)
+- [x] Public npm registry namespace query verified (404 confirmed for `@trivio.ink/core`, `@trivio.ink/node`, `@trivio.ink/react`; zero conflicts)
+- [x] Release governance runbook authored in `docs/NPM_RELEASE_AUTHORIZATION.md`
+- [x] Strict dependency release order defined (Core -> Node & React)
+- [x] Isolated npm tarball installation acceptance script (`npm run test:tarball`) verified
+- [x] All three SDKs preserved as private (`"private": true`) pending Stage 3C-B3 authorization
+- [x] 192 / 192 Vitest tests and 65 / 65 release verification checks passing
+
+---
+
+## Stage 3C-B3: First Controlled npm Public Release (Next — Requires Explicit Owner Authorization)
+
+**Goal:** Remove `"private": true` publication guard upon explicit owner authorization, execute controlled initial publication (`v0.1.0`), and verify live registry artifacts.
+
+- [ ] Project owner explicit release authorization for `v0.1.0`
+- [ ] Removal of `"private": true` from SDK package manifests
+- [ ] Sequential public publication to npm registry (`--access=public`)
+- [ ] Live registry smoke tests and post-release external consumer verification
+- [ ] Linking of GitHub Actions OIDC Trusted Publisher for future automated patch releases
 
 ---
 
