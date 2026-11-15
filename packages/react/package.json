@@ -4,9 +4,35 @@
   "private": true,
   "description": "Reusable React UI components and hooks for Trivio payment settlement intelligence",
   "homepage": "https://trivio.ink",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/trivio-ink/trivio-platform.git",
+    "directory": "packages/react"
+  },
+  "bugs": {
+    "url": "https://github.com/trivio-ink/trivio-platform/issues"
+  },
+  "keywords": [
+    "payment",
+    "settlement",
+    "trivio",
+    "react",
+    "ui",
+    "components",
+    "hooks",
+    "fintech",
+    "theme"
+  ],
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -18,7 +44,7 @@
     "react": ">=18.0.0"
   },
   "dependencies": {
-    "@trivio.ink/core": "*"
+    "@trivio.ink/core": "^0.1.0"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
