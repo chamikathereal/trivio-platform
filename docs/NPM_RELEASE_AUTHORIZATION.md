@@ -130,3 +130,36 @@ In accordance with official npm unpublishing policies:
   npm deprecate @trivio.ink/<package>@0.1.0 "Critical defect: update to 0.1.1 immediately."
   ```
 - **Hotfix Release:** A patched version (`0.1.1`) will be built, tested, and released following the standard governance workflow.
+
+---
+
+## 8. Release Approval Certificate (`TRIVIO-NPM-0.1.0`)
+
+| Parameter | Record Details | Verification Status |
+| :--- | :--- | :---: |
+| **Release ID** | `TRIVIO-NPM-0.1.0` | Active Draft |
+| **Canonical Git Baseline** | Commit `5d85160` on `trivio-ink:main` | Verified |
+| **npm Organization** | `trivio.ink` (Scope: `@trivio.ink`) | Verified (`chamikathereal - owner`) |
+| **npm Account Security** | Two-Factor Authentication (`auth-and-writes`) | Verified |
+| **Core SDK** | `@trivio.ink/core@0.1.0` | Verified (59,196 B, SHA512 verified) |
+| **Node SDK** | `@trivio.ink/node@0.1.0` | Verified (15,542 B, SHA512 verified) |
+| **React SDK** | `@trivio.ink/react@0.1.0` | Verified (30,496 B, SHA512 verified) |
+| **Approved License** | Apache License, Version 2.0 (`Apache-2.0`) | Verified (`LIC-2026-001` Rev 2) |
+| **Automated Tests** | 192 / 192 passed across 9 test files | Verified (Vitest) |
+| **Consumer Acceptance** | 65 / 65 checks passed | Verified (`verify:release`) |
+| **Isolated Tarballs** | 100% passed in OS temp directory | Verified (`npm run test:tarball`) |
+| **Legal Entity Verification** | Registered legal entity details & IP assignment | **PENDING OWNER DOCUMENTATION** |
+| **Publication Authorization** | Public registry publication authorization | **NOT GRANTED** |
+
+---
+
+## 9. Private Legal Evidence Checklist (Maintained Outside Git)
+
+In accordance with confidentiality and privacy standards, official corporate registration certificates, national IDs, and contracts must **never** be committed to the public Git repository.
+
+The repository maintainer should retain the following private records offline:
+- [ ] **Certificate of Incorporation:** Exact registered legal company name, company registration number, and jurisdiction of incorporation (e.g. from Sri Lanka eROC portal or competent registrar).
+- [ ] **Current Company Extract:** Confirms active status and official registered office address.
+- [ ] **Corporate Authority:** Confirmation that the person authorizing release has authority to act on behalf of the company.
+- [ ] **Intellectual Property Title / Assignment:** Written confirmation or founder assignment ensuring the company owns or holds sufficient distribution rights over the contributed SDK source code.
+- [ ] **Third-Party Rights Check:** Verified that `@trivio.ink/core` has zero third-party dependencies, and Node/React dependencies comply with Apache-2.0.
