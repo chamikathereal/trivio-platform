@@ -305,8 +305,100 @@ console.log(forecast);
 
 ---
 
-## 11. Limitations & Roadmap
+## 11. Integrated Settlement Intelligence Engine (Stage 2C)
 
-- **Authorization Estimates vs. Settlements:** Forecasts represent estimated deposit dates based on contractual schedules. Actual bank credit batches are confirmed via bank reconciliation files.
+The unified payment settlement intelligence primitive (`calculatePaymentSettlementEstimate`) combines dynamic MDR fee deduction and bank deposit date forecasting into one developer-friendly, deterministic API call.
+
+### Usage Example: Consolidated Fee Deduction & Deposit Date Projection
+
+```typescript
+import {
+  calculatePaymentSettlementEstimate,
+  type IntegratedTransactionInput,
+  type MerchantFeeRule,
+  type SettlementPolicy,
+  type SettlementCalendar,
+} from '@trivio.ink/core';
+
+// 1. Transaction context: LKR 10,000.00 sale at Colombo retail store
+const transaction: IntegratedTransactionInput = {
+  id: 'tx_pos_001',
+  grossMinor: 1_000_000, // LKR 10,000.00
+  currency: 'LKR',
+  transactionTime: '2026-11-13T10:00:00+05:30', // Friday 10:00 local
+  acquirerId: 'ACQ_BOC',
+  merchantId: 'MCH_RETAIL',
+  terminalId: 'POS_TERM_01',
+};
+
+// 2. Agreed fee schedule (2.50% MDR)
+const feeRules: MerchantFeeRule[] = [
+  {
+    id: 'rule_boc_retail',
+    version: '1.0.0',
+    acquirerId: 'ACQ_BOC',
+    effectiveFrom: '2026-01-01T00:00:00Z',
+    priority: 0,
+    feeStructure: { rateBasisPoints: 250, fixedFeeMinor: 0 },
+    rateSource: 'merchant_configured',
+  },
+];
+
+// 3. Settlement policy (T+1 business days, 17:00 cut-off)
+const settlementPolicies: SettlementPolicy[] = [
+  {
+    id: 'pol_boc_t1',
+    version: '1.0.0',
+    acquirerId: 'ACQ_BOC',
+    effectiveFrom: '2026-01-01',
+    priority: 0,
+    cycleLength: 1,
+    cycleUnit: 'business_days',
+    cutOffTime: '17:00',
+    timeZone: 'Asia/Colombo',
+    calendarId: 'cal_colombo',
+    nonWorkingDayConvention: 'following_business_day',
+  },
+];
+
+// 4. Working day calendar
+const calendars: SettlementCalendar[] = [
+  {
+    id: 'cal_colombo',
+    version: '2026.1',
+    timeZone: 'Asia/Colombo',
+    workingDays: [1, 2, 3, 4, 5], // Monday - Friday
+    holidays: [],
+  },
+];
+
+// 5. Calculate consolidated estimate
+const estimate = calculatePaymentSettlementEstimate(transaction, {
+  feeRules,
+  settlementPolicies,
+  calendars,
+});
+
+console.log(estimate);
+// {
+//   grossMinor: 1000000,
+//   totalFeeMinor: 25000,
+//   netMinor: 975000,
+//   expectedSettlementDate: '2026-11-16', // Monday
+//   settlementCycle: 'T+1',
+//   status: 'ESTIMATED',
+//   isEstimated: true,
+//   feeBreakdown: { ... },
+//   appliedFeeRule: { ... },
+//   appliedSettlementPolicy: { ... },
+//   settlementAdjustments: [ ... ]
+// }
+```
+
+---
+
+## 12. Limitations & Roadmap
+
+- **Authorization Estimates vs. Settlements:** Outputs are offline mathematical estimates at authorization time. Realized bank credits remain subject to post-authorization batch reconciliation.
 - **Card Surcharges:** The core engine does not compute customer-facing checkout surcharges; it models merchant acquirer deductions and deposit schedules.
-- **Stage 2C Integration:** Stage 2C will introduce a unified developer API combining fee deductions and settlement date projections.
+- **Stage 3 SDKs:** Multi-platform developer SDKs (`@trivio.ink/node` and `@trivio.ink/react`) will provide server middlewares and React visualizers.

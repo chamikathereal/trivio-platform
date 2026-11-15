@@ -71,18 +71,22 @@
 
 ---
 
-## Stage 2C: Integrated Merchant Fee and Settlement Intelligence Engine (Next)
+## Stage 2C: Integrated Merchant Fee and Settlement Intelligence Engine (Completed)
 
-**Goal:** Combine dynamic fee calculation and settlement calendar forecasting into a unified, high-level developer orchestration API.
+**Goal:** Combine dynamic fee calculation and settlement calendar forecasting into a unified, high-level developer orchestration API in `@trivio.ink/core`.
 
-- [ ] Unified financial calculation primitive combining MDR deductions and bank deposit projections
-- [ ] Composite calculation result model with complete fee ledger breakdown and settlement timeline
-- [ ] End-to-end reconciliation scenario modeling for multi-acquirer retail and e-commerce setups
-- [ ] Full backward compatibility with Stage 2A (`calculateFeeEstimate`) and Stage 2B (`estimateSettlementDate`)
+- [x] Unified financial calculation primitive combining MDR deductions and bank deposit projections (`calculatePaymentSettlementEstimate`)
+- [x] Composite calculation result model with complete fee ledger breakdown, net settlement proceeds, and settlement timeline
+- [x] Canonical transaction context mapping into underlying fee and settlement engines
+- [x] Support for both configuration object and positional argument signatures
+- [x] Runtime immutability on composite results and historical snapshots (`deepFreeze`)
+- [x] Full backward compatibility with Stage 2A (`calculateFeeEstimate`) and Stage 2B (`estimateSettlementDate`)
+- [x] 18 new automated integration tests covering commercial scenarios, terminal scopes, and negative net overrides
+- [x] 140 total automated unit tests passing across all packages (100% pass rate)
 
 ---
 
-## Stage 3: Multi-Platform Developer SDKs (`@trivio.ink/node`, `@trivio.ink/react`)
+## Stage 3: Multi-Platform Developer SDKs (`@trivio.ink/node`, `@trivio.ink/react`) (Next)
 
 **Goal:** Provide seamless integration tools for server-side and client-side engineers.
 
