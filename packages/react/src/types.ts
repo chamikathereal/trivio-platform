@@ -18,12 +18,12 @@ export type TrivioTheme = 'light' | 'dark' | 'auto';
 
 /**
  * Context configuration value for Trivio React components.
+ * Contains presentation and display settings only (theme, currency, locale).
+ * Never contains fallback financial rates or automated fee defaults.
  */
 export interface TrivioContextValue {
   /** Default ISO 4217 currency code (e.g. 'USD', 'LKR', 'EUR'). Defaults to 'USD'. */
   currencyCode: string;
-  /** Default fallback rate in basis points (e.g. 250 for 2.50%). */
-  defaultRateBps: number;
   /** Active theme mode for components under this provider. */
   theme: TrivioTheme;
   /** Optional locale identifier for number/date display (e.g. 'en-US'). */
@@ -36,8 +36,6 @@ export interface TrivioContextValue {
 export interface TrivioProviderProps {
   /** Optional default currency code for child components. */
   currencyCode?: string;
-  /** Optional default fallback fee rate in basis points. */
-  defaultRateBps?: number;
   /** UI theme mode ('light', 'dark', or 'auto'). Defaults to 'auto'. */
   theme?: TrivioTheme;
   /** Optional locale identifier. */

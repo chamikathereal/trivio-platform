@@ -9,7 +9,7 @@ import type { TrivioFeeBreakdownProps } from '../types.js';
 import { useTrivio } from '../context.js';
 import { formatCurrency, formatRateBps } from '../formatters.js';
 import { getCardStyle, getBadgeStyle, getThemePalette } from '../theme.js';
-import { estimatePercentageFee } from '@trivio.ink/core';
+import { estimatePercentageFee, TrivioValidationError } from '@trivio.ink/core';
 
 /**
  * Itemized financial fee breakdown presentation component.
@@ -35,6 +35,13 @@ export function TrivioFeeBreakdown({
   className = 'trivio-fee-breakdown',
   testId = 'trivio-fee-breakdown',
 }: TrivioFeeBreakdownProps): React.JSX.Element {
+  // Explicit rejection: Trivio Cardinal Rule - never assume or invent an MDR
+  if (!estimate && (!propFeeResult || !('breakdown' in propFeeResult)) && propRateBps === undefined) {
+    throw new TrivioValidationError(
+      'TrivioFeeBreakdown requires an explicit fee agreement. Pass either a valid estimate, feeResult, or explicit rateBasisPoints. Trivio does not permit default or fallback merchant fee rates.'
+    );
+  }
+
   const context = useTrivio();
   const theme = propTheme ?? context.theme ?? 'dark';
   const palette = getThemePalette(theme);
@@ -83,23 +90,29 @@ export function TrivioFeeBreakdown({
     }
 
     // 3. From direct/legacy props
-    const gross = propGross ?? 0;
-    const rateBps = propRateBps ?? context.defaultRateBps ?? 0;
-    const legacy = estimatePercentageFee(Number(gross), rateBps);
+    if (propRateBps !== undefined) {
+      const gross = propGross ?? 0;
+      const legacy = estimatePercentageFee(Number(gross), propRateBps);
 
-    return {
-      gross: legacy.grossMinor,
-      feeTotal: legacy.feeMinor,
-      net: legacy.netMinor,
-      percentageFee: legacy.feeMinor,
-      rateBps: legacy.rateBasisPoints,
-      fixedFee: 0,
-      isMinApplied: false,
-      isMaxApplied: false,
-      taxAdjustment: 0,
-      snapshot: undefined,
-    };
-  }, [estimate, propFeeResult, propGross, propRateBps, context.defaultRateBps]);
+      return {
+        gross: legacy.grossMinor,
+        feeTotal: legacy.feeMinor,
+        net: legacy.netMinor,
+        percentageFee: legacy.feeMinor,
+        rateBps: legacy.rateBasisPoints,
+        fixedFee: 0,
+        isMinApplied: false,
+        isMaxApplied: false,
+        taxAdjustment: 0,
+        snapshot: undefined,
+      };
+    }
+
+    // Explicit rejection: Trivio Cardinal Rule - never assume or invent an MDR
+    throw new TrivioValidationError(
+      'TrivioFeeBreakdown requires an explicit fee agreement. Pass either a valid estimate, feeResult, or explicit rateBasisPoints. Trivio does not permit default or fallback merchant fee rates.'
+    );
+  }, [estimate, propFeeResult, propGross, propRateBps]);
 
   const cardStyle = getCardStyle(theme);
   const formattedGross = formatCurrency(computedValues.gross, currency);

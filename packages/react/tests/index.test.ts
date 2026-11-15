@@ -206,7 +206,6 @@ describe('@trivio.ink/react SDK Test Suite', () => {
         TrivioProvider,
         {
           currencyCode: 'LKR',
-          defaultRateBps: 250,
           theme: 'light',
           locale: 'en-GB',
         },
@@ -215,8 +214,20 @@ describe('@trivio.ink/react SDK Test Suite', () => {
 
       expect(React.isValidElement(element)).toBe(true);
       expect(element.props.currencyCode).toBe('LKR');
-      expect(element.props.defaultRateBps).toBe(250);
       expect(element.props.theme).toBe('light');
+      expect(element.props.locale).toBe('en-GB');
+    });
+
+    it('does not store or provide a fallback financial fee rate', () => {
+      // Trivio Cardinal Rule: Never assume or invent an MDR
+      const element = React.createElement(TrivioProvider, {
+        currencyCode: 'USD',
+        theme: 'dark',
+        children: React.createElement('div', null, 'child'),
+      });
+
+      expect(React.isValidElement(element)).toBe(true);
+      expect('defaultRateBps' in element.props).toBe(false);
     });
   });
 
@@ -257,7 +268,7 @@ describe('@trivio.ink/react SDK Test Suite', () => {
       expect(element.props.estimate?.grossMinor).toBe(1_000_000);
     });
 
-    it('handles null estimate and zero values gracefully with fallback defaults', () => {
+    it('handles explicit zero values gracefully', () => {
       const element = React.createElement(TrivioSettlementSummary, {
         estimate: null,
         grossMinor: 0,
@@ -270,6 +281,12 @@ describe('@trivio.ink/react SDK Test Suite', () => {
       expect(React.isValidElement(element)).toBe(true);
       expect(element.props.grossMinor).toBe(0);
       expect(element.props.showDisclaimer).toBe(false);
+    });
+
+    it('rejects unconfigured settlement summary with TrivioValidationError when estimate and amounts are omitted', () => {
+      expect(() => {
+        TrivioSettlementSummary({});
+      }).toThrow('TrivioSettlementSummary requires either a valid estimate or explicit');
     });
   });
 
@@ -304,7 +321,7 @@ describe('@trivio.ink/react SDK Test Suite', () => {
       expect(element.props.showRuleSnapshot).toBe(true);
     });
 
-    it('handles null estimate and zero rates gracefully', () => {
+    it('handles explicit zero rates gracefully when provided', () => {
       const element = React.createElement(TrivioFeeBreakdown, {
         estimate: null,
         grossMinor: 0,
@@ -315,6 +332,13 @@ describe('@trivio.ink/react SDK Test Suite', () => {
       expect(React.isValidElement(element)).toBe(true);
       expect(element.props.grossMinor).toBe(0);
       expect(element.props.currencyCode).toBe('EUR');
+    });
+
+    it('strictly rejects missing fee rate with TrivioValidationError when estimate/feeResult is omitted', () => {
+      // Trivio Financial Safety Invariant: Never invent or assume an MDR fallback rate
+      expect(() => {
+        TrivioFeeBreakdown({ grossMinor: 100_000 });
+      }).toThrow('TrivioFeeBreakdown requires an explicit fee agreement');
     });
   });
 
@@ -360,6 +384,12 @@ describe('@trivio.ink/react SDK Test Suite', () => {
 
       expect(React.isValidElement(element)).toBe(true);
       expect(element.props.currencyCode).toBe('LKR');
+    });
+
+    it('rejects unconfigured timeline with TrivioValidationError when estimate and steps are omitted', () => {
+      expect(() => {
+        TrivioSettlementTimeline({});
+      }).toThrow('TrivioSettlementTimeline requires either an estimate, settlementDateResult, or customSteps');
     });
   });
 
