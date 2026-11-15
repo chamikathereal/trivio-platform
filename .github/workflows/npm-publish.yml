@@ -1,0 +1,95 @@
+name: npm Trusted Release (Draft Architecture)
+
+on:
+  workflow_dispatch:
+    inputs:
+      package_scope:
+        description: 'Target package to publish (or "all" for all three SDKs)'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - '@trivio.ink/core'
+          - '@trivio.ink/node'
+          - '@trivio.ink/react'
+      dry_run:
+        description: 'Run in dry-run mode without publishing'
+        required: true
+        default: true
+        type: boolean
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: npm-release
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    name: Verify Release Baseline
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout canonical main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Setup Node.js 22 LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build all workspaces
+        run: npm run build
+
+      - name: Run strict typechecking
+        run: npm run typecheck
+
+      - name: Run automated test suite
+        run: npm test
+
+      - name: Run consumer acceptance verification
+        run: npm run verify:release
+
+  publish:
+    name: Publish with Provenance (OIDC)
+    needs: verify
+    runs-on: ubuntu-latest
+    environment: npm-release
+    steps:
+      - name: Checkout canonical main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Setup Node.js 22 LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build all packages
+        run: npm run build
+
+      - name: Execute Controlled Publication (Draft)
+        run: |
+          if [ "${{ inputs.dry_run }}" = "true" ]; then
+            echo "Executing dry-run publish..."
+            npm publish --workspace=@trivio.ink/core --access=public --dry-run
+            npm publish --workspace=@trivio.ink/node --access=public --dry-run
+            npm publish --workspace=@trivio.ink/react --access=public --dry-run
+          else
+            echo "Real release requires active npm Trusted Publisher configuration."
+            echo "Skipping actual publish until v0.1.1 is scheduled."
+            exit 1
+          fi
