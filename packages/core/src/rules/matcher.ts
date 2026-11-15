@@ -15,12 +15,16 @@ export interface MatchedRuleCandidate {
 /**
  * Calculates specificity score for a candidate rule based on criteria granularity.
  *
- * Terminal match: +100
- * Merchant match: +50
- * Card Scheme match: +25
- * Card Funding Type match: +15
- * Card Region match: +10
- * Currency match: +5
+ * Uses strict hierarchical powers so that higher-level criteria (Terminal > Merchant >
+ * Scheme > Funding Type > Region > Currency) cannot be accidentally outranked by any
+ * combination of lower-level criteria:
+ *
+ * Terminal match:          +100,000  (Hardware-level agreement)
+ * Merchant match:          +10,000   (Enterprise/merchant agreement; max lower sum = 1,111)
+ * Card Scheme match:       +1,000    (Network agreement; max lower sum = 111)
+ * Card Funding Type match: +100      (Product agreement; max lower sum = 11)
+ * Card Region match:       +10       (Geographical jurisdiction; max lower sum = 1)
+ * Currency match:          +1        (Currency constraint)
  */
 export function calculateSpecificityScore(
   rule: NormalizedFeeRule,
@@ -29,22 +33,22 @@ export function calculateSpecificityScore(
   let score = 0;
 
   if (rule.terminalId && tx.terminalId && rule.terminalId === tx.terminalId) {
-    score += 100;
+    score += 100_000;
   }
   if (rule.merchantId && rule.merchantId !== '*' && tx.merchantId && rule.merchantId === tx.merchantId) {
-    score += 50;
+    score += 10_000;
   }
   if (rule.cardScheme && tx.cardScheme && rule.cardScheme.toLowerCase() === tx.cardScheme.toLowerCase()) {
-    score += 25;
+    score += 1_000;
   }
   if (rule.cardFundingType && tx.cardFundingType && rule.cardFundingType.toLowerCase() === tx.cardFundingType.toLowerCase()) {
-    score += 15;
+    score += 100;
   }
   if (rule.cardRegion && tx.cardRegion && rule.cardRegion.toLowerCase() === tx.cardRegion.toLowerCase()) {
     score += 10;
   }
   if (rule.currency && rule.currency.toUpperCase() === tx.currency) {
-    score += 5;
+    score += 1;
   }
 
   return score;
@@ -169,11 +173,15 @@ export function findMatchingRule(
   // Sort candidates:
   // 1. Highest priority first
   // 2. Highest specificity first
+  // 3. Deterministic tie-breaker by rule ID (guarantees identical result regardless of input array order)
   eligibleCandidates.sort((a, b) => {
     if (b.rule.priority !== a.rule.priority) {
       return b.rule.priority - a.rule.priority;
     }
-    return b.specificityScore - a.specificityScore;
+    if (b.specificityScore !== a.specificityScore) {
+      return b.specificityScore - a.specificityScore;
+    }
+    return a.rule.id.localeCompare(b.rule.id);
   });
 
   const best = eligibleCandidates[0]!;

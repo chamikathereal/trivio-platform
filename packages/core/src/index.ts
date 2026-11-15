@@ -33,6 +33,7 @@ export type {
 // 4. Result types
 export type {
   FeeBreakdownDetails,
+  AppliedRuleSnapshot,
   DynamicFeeEstimateResult,
   FeeCalculationOptions,
 } from './types/result.js';

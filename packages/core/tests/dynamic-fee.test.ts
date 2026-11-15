@@ -576,4 +576,194 @@ describe('Dynamic Fee Calculation Engine (@trivio.ink/core)', () => {
       );
     });
   });
+
+  describe('9. Financial Acceptance & Rigorous Invariant Audit', () => {
+    it('guarantees terminal-specific rule cannot be outranked by accumulated lower-level criteria', () => {
+      // Rule A: Terminal-specific ONLY (no merchant, scheme, funding, region, currency)
+      const terminalOnlyRule: MerchantFeeRule = {
+        id: 'rule_terminal_specific_contract',
+        version: 1,
+        acquirerId: 'acq_boc',
+        terminalId: 'term_pos_01',
+        effectiveFrom: '2026-01-01T00:00:00Z',
+        feeStructure: { rateBasisPoints: 175 }, // 1.75%
+      };
+
+      // Rule B: Merchant + Scheme + Funding + Region + Currency (accumulates all lower-tier criteria)
+      const multiAttributeRule: MerchantFeeRule = {
+        id: 'rule_broad_merchant_card_matrix',
+        version: 1,
+        acquirerId: 'acq_boc',
+        merchantId: 'mch_colombo_supermarket',
+        cardScheme: 'visa',
+        cardFundingType: 'debit',
+        cardRegion: 'domestic',
+        currency: 'LKR',
+        effectiveFrom: '2026-01-01T00:00:00Z',
+        feeStructure: { rateBasisPoints: 220 }, // 2.20%
+      };
+
+      // Both rules match the transaction context. Terminal-specific MUST WIN.
+      const result = calculateFeeEstimate(BASE_TRANSACTION, [multiAttributeRule, terminalOnlyRule]);
+      expect(result.appliedRule.id).toBe('rule_terminal_specific_contract');
+      expect(result.appliedRateBasisPoints).toBe(175);
+    });
+
+    it('guarantees merchant-specific rule cannot be outranked by accumulated card/currency criteria', () => {
+      // Transaction on another terminal
+      const tx: TransactionInput = {
+        ...BASE_TRANSACTION,
+        terminalId: 'term_general_pos',
+      };
+
+      // Rule A: Merchant-specific ONLY
+      const merchantOnlyRule: MerchantFeeRule = {
+        id: 'rule_merchant_bespoke_agreement',
+        version: 1,
+        acquirerId: 'acq_boc',
+        merchantId: 'mch_colombo_supermarket',
+        effectiveFrom: '2026-01-01T00:00:00Z',
+        feeStructure: { rateBasisPoints: 190 },
+      };
+
+      // Rule B: Acquirer-wide card scheme + funding + region + currency
+      const acquirerCardRule: MerchantFeeRule = {
+        id: 'rule_acquirer_default_card_matrix',
+        version: 1,
+        acquirerId: 'acq_boc',
+        cardScheme: 'visa',
+        cardFundingType: 'debit',
+        cardRegion: 'domestic',
+        currency: 'LKR',
+        effectiveFrom: '2026-01-01T00:00:00Z',
+        feeStructure: { rateBasisPoints: 260 },
+      };
+
+      const result = calculateFeeEstimate(tx, [acquirerCardRule, merchantOnlyRule]);
+      expect(result.appliedRule.id).toBe('rule_merchant_bespoke_agreement');
+      expect(result.appliedRateBasisPoints).toBe(190);
+    });
+
+    it('ensures rule selection is completely independent of input array ordering', () => {
+      const ruleA: MerchantFeeRule = {
+        id: 'rule_equivalent_a',
+        version: 1,
+        acquirerId: 'acq_boc',
+        cardScheme: 'visa',
+        effectiveFrom: '2026-01-01T00:00:00Z',
+        feeStructure: { rateBasisPoints: 200 },
+      };
+
+      const ruleB: MerchantFeeRule = {
+        id: 'rule_equivalent_b',
+        version: 1,
+        acquirerId: 'acq_boc',
+        cardScheme: 'visa',
+        effectiveFrom: '2026-01-01T00:00:00Z',
+        feeStructure: { rateBasisPoints: 200 }, // Identical rate
+      };
+
+      const resForward = calculateFeeEstimate(BASE_TRANSACTION, [ruleA, ruleB]);
+      const resReverse = calculateFeeEstimate(BASE_TRANSACTION, [ruleB, ruleA]);
+
+      // Both must pick the exact same rule ID deterministically
+      expect(resForward.appliedRule.id).toBe(resReverse.appliedRule.id);
+      expect(resForward.totalFeeMinor).toBe(resReverse.totalFeeMinor);
+    });
+
+    it('exposes an immutable snapshot of applied agreement for historical audit trails', () => {
+      const result = calculateFeeEstimate(BASE_TRANSACTION, [BASE_RULE]);
+
+      expect(result.appliedRule.snapshot).toBeDefined();
+      expect(result.appliedRule.snapshot.id).toBe(BASE_RULE.id);
+      expect(result.appliedRule.snapshot.version).toBe(BASE_RULE.version);
+      expect(result.appliedRule.snapshot.acquirerId).toBe(BASE_RULE.acquirerId);
+      expect(result.appliedRule.snapshot.rateBasisPoints).toBe(250);
+      expect(result.appliedRule.snapshot.fixedFeeMinor).toBe(0);
+      expect(result.appliedRule.snapshot.effectiveFrom).toBe('2026-01-01T00:00:00.000Z');
+    });
+
+    it('does not mutate input transaction or rules objects', () => {
+      const txClone = JSON.parse(JSON.stringify(BASE_TRANSACTION));
+      const ruleClone = JSON.parse(JSON.stringify(BASE_RULE));
+
+      calculateFeeEstimate(BASE_TRANSACTION, [BASE_RULE]);
+
+      expect(BASE_TRANSACTION).toEqual(txClone);
+      expect(BASE_RULE).toEqual(ruleClone);
+    });
+
+    it('handles zero-value transaction consistently with fee configuration', () => {
+      const zeroTx: TransactionInput = {
+        ...BASE_TRANSACTION,
+        grossMinor: 0,
+      };
+
+      // Zero-value with 0 fixed fee -> 0 fee, 0 net
+      const zeroFeeRule: MerchantFeeRule = {
+        ...BASE_RULE,
+        feeStructure: { rateBasisPoints: 250, fixedFeeMinor: 0 },
+      };
+      const resZero = calculateFeeEstimate(zeroTx, [zeroFeeRule]);
+      expect(resZero.grossMinor).toBe(0);
+      expect(resZero.totalFeeMinor).toBe(0);
+      expect(resZero.netMinor).toBe(0);
+
+      // Zero-value with fixed fee of 50 minor and allowNegativeNetSettlement
+      const fixedFeeRule: MerchantFeeRule = {
+        ...BASE_RULE,
+        feeStructure: { rateBasisPoints: 250, fixedFeeMinor: 50 },
+      };
+      const resNeg = calculateFeeEstimate(zeroTx, [fixedFeeRule], {
+        allowNegativeNetSettlement: true,
+      });
+      expect(resNeg.grossMinor).toBe(0);
+      expect(resNeg.totalFeeMinor).toBe(50);
+      expect(resNeg.netMinor).toBe(-50);
+
+      // Without allowNegativeNetSettlement -> throws
+      expect(() => calculateFeeEstimate(zeroTx, [fixedFeeRule])).toThrow(
+        NegativeNetSettlementError
+      );
+    });
+
+    it('reconciles exact ledger balances across all boundary adjustments', () => {
+      const complexRule: MerchantFeeRule = {
+        id: 'rule_complex_reconciliation',
+        version: 1,
+        acquirerId: 'acq_boc',
+        effectiveFrom: '2026-01-01T00:00:00Z',
+        feeStructure: {
+          rateBasisPoints: 275, // 2.75%
+          fixedFeeMinor: 1_500, // LKR 15.00
+          minFeeMinor: 5_000,   // LKR 50.00 floor
+          maxFeeMinor: 50_000,  // LKR 500.00 ceiling
+          taxAdjustment: {
+            rateBasisPoints: 1800, // 18% VAT
+            fixedMinor: 250,       // 2.50 stamp duty
+            name: 'VAT + Stamp',
+          },
+        },
+      };
+
+      // Test multiple transaction sizes
+      const grossAmounts = [10_000, 50_000, 1_000_000, 5_000_000];
+
+      for (const gross of grossAmounts) {
+        const tx: TransactionInput = { ...BASE_TRANSACTION, grossMinor: gross };
+        const result = calculateFeeEstimate(tx, [complexRule]);
+
+        // Invariant 1: Gross equals total deductions plus net
+        expect(result.grossMinor).toBe(result.totalFeeMinor + result.netMinor);
+
+        // Invariant 2: Total fee equals adjusted base fee plus tax
+        expect(result.totalFeeMinor).toBe(
+          result.breakdown.adjustedBaseFeeMinor + result.taxMinor
+        );
+
+        // Invariant 3: Net is exact subtraction
+        expect(result.netMinor).toBe(result.grossMinor - result.totalFeeMinor);
+      }
+    });
+  });
 });
