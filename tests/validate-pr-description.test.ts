@@ -96,26 +96,31 @@ describe('PR Description Validator (Stage 1.1)', () => {
     expect(result.errors).toHaveLength(0);
   });
 
-  it('accepts required sections when top-level headings use level-3 markdown', () => {
-    const level3SectionHeadingsPR = VALID_SAMPLE_PR.replace(/^### /gm, '#### ').replace(/^## /gm, '### ');
-
-    const result = validatePrDescription(level3SectionHeadingsPR);
+  it('accepts valid PR descriptions with CRLF (\\r\\n) line breaks from web form submissions', () => {
+    const crlfPR = VALID_SAMPLE_PR.replace(/\n/g, '\r\n');
+    const result = validatePrDescription(crlfPR);
     expect(result.valid).toBe(true);
     expect(result.errors).toHaveLength(0);
   });
 
   it('accepts required sections when top-level headings use level-1 markdown', () => {
     const level1SectionHeadingsPR = VALID_SAMPLE_PR.replace(/^## (\d+\.\s)/gm, '# $1');
-
     const result = validatePrDescription(level1SectionHeadingsPR);
     expect(result.valid).toBe(true);
     expect(result.errors).toHaveLength(0);
   });
 
-  it('accepts required sections with leading heading indentation', () => {
-    const indentedHeadingPR = VALID_SAMPLE_PR.replace(/^## /gm, '  ## ');
+  it('accepts required sections when headings have leading indentation and closing hashes', () => {
+    const formattedHeadingsPR = VALID_SAMPLE_PR.replace(/^## (\d+\.\s[^\n]+)/gm, '  ## $1 ##');
+    const result = validatePrDescription(formattedHeadingsPR);
+    expect(result.valid).toBe(true);
+    expect(result.errors).toHaveLength(0);
+  });
 
-    const result = validatePrDescription(indentedHeadingPR);
+  it('accepts required sections when top-level headings use level-3 markdown', () => {
+    const level3SectionHeadingsPR = VALID_SAMPLE_PR.replace(/^### /gm, '#### ').replace(/^## /gm, '### ');
+
+    const result = validatePrDescription(level3SectionHeadingsPR);
     expect(result.valid).toBe(true);
     expect(result.errors).toHaveLength(0);
   });
