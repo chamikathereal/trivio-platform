@@ -86,20 +86,34 @@
 
 ---
 
-## Stage 3: Multi-Platform Developer SDKs (`@trivio.ink/node`, `@trivio.ink/react`) (Next)
+## Stage 3A: Production-Ready Node.js Developer SDK (`@trivio.ink/node`) (Completed)
 
-**Goal:** Provide seamless integration tools for server-side and client-side engineers.
+**Goal:** Transform the `@trivio.ink/node` package into a robust server-side SDK for ERP, POS, and accounting integrations.
 
-- [ ] **Node.js SDK (`@trivio.ink/node`):**
-  - Offline-first configuration manager
-  - Middlewares for Express, Fastify, and NestJS
-  - Transaction ledger formatting utilities
-  - Webhook payload signature verification
-- [ ] **React Components (`@trivio.ink/react`):**
-  - Merchant fee breakdown visualizer
-  - Settlement schedule calendar component
-  - Bank account & acquirer settings form fields
-  - Accessible, WCAG-compliant design tokens
+- [x] Client initialization with optional pre-configured fee rules, settlement policies, and calendars (`TrivioClient`)
+- [x] Multi-merchant isolation and immutability protection on registered configurations (`deepFreeze`)
+- [x] Unified calculation methods: `calculateSettlement`, `calculateDynamicFee`, `estimateSettlementDate`, `calculateFee`
+- [x] Per-request configuration overrides and default merchant/terminal/currency cascading
+- [x] Standardized persistent ledger record generator (`createLedgerRecord`) and summary formatter (`formatLedgerSummary`)
+- [x] Working practical ERP integration example (`examples/erp-settlement-integration.ts`)
+- [x] 10 new automated unit and integration tests expanding monorepo test coverage to 150 passing tests (100% pass rate)
+
+---
+
+## Stage 3B: React Developer SDK (`@trivio.ink/react`) (Next)
+
+**Goal:** Provide accessible, developer-friendly React UI components and hooks for merchant fee breakdowns and settlement calendar scheduling.
+
+- [ ] Merchant fee ledger breakdown visualization component
+- [ ] Settlement schedule calendar and date projection display
+- [ ] Acquirer and agreement settings form controls
+- [ ] Accessible, WCAG-compliant design tokens and zero-runtime-dependency styling
+
+---
+
+## Stage 3C: npm Release Readiness & Multi-Platform Packaging (Planned)
+
+**Goal:** Prepare all three SDK packages (`@trivio.ink/core`, `@trivio.ink/node`, `@trivio.ink/react`) for public release on the npm registry.
 
 ---
 
