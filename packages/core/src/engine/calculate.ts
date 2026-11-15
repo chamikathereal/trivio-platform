@@ -25,6 +25,21 @@ import { validateAndNormalizeRules } from '../validation/rule.js';
 import { validateAndNormalizeTransaction } from '../validation/transaction.js';
 
 /**
+ * Recursively freezes an object at runtime to guarantee genuine runtime immutability.
+ * Protects financial calculation snapshots and ledger breakdowns from arbitrary tampering.
+ */
+function deepFreeze<T extends object>(obj: T): Readonly<T> {
+  Object.freeze(obj);
+  for (const key of Object.keys(obj) as Array<keyof T>) {
+    const val = obj[key];
+    if (val && typeof val === 'object' && !Object.isFrozen(val)) {
+      deepFreeze(val as object);
+    }
+  }
+  return obj;
+}
+
+/**
  * Calculates a deterministic fee and net settlement estimate for a payment transaction
  * using caller-supplied merchant agreement rules.
  *
@@ -174,7 +189,11 @@ export function calculateFeeEstimate(
     minFeeMinor: fs.minFeeMinor,
     maxFeeMinor: fs.maxFeeMinor,
     taxAdjustment: fs.taxAdjustment ? { ...fs.taxAdjustment } : undefined,
+    calculationPolicy,
   };
+
+  deepFreeze(ruleSnapshot);
+  deepFreeze(breakdown);
 
   return {
     grossMinor: normalizedTx.grossMinor,

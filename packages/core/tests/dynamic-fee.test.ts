@@ -644,9 +644,9 @@ describe('Dynamic Fee Calculation Engine (@trivio.ink/core)', () => {
       expect(result.appliedRateBasisPoints).toBe(190);
     });
 
-    it('ensures rule selection is completely independent of input array ordering', () => {
-      const ruleA: MerchantFeeRule = {
-        id: 'rule_equivalent_a',
+    it('strictly rejects distinct agreements with identical priority and specificity to prevent misleading attribution', () => {
+      const agreementA: MerchantFeeRule = {
+        id: 'agreement_retail_tier_2026',
         version: 1,
         acquirerId: 'acq_boc',
         cardScheme: 'visa',
@@ -654,20 +654,34 @@ describe('Dynamic Fee Calculation Engine (@trivio.ink/core)', () => {
         feeStructure: { rateBasisPoints: 200 },
       };
 
-      const ruleB: MerchantFeeRule = {
-        id: 'rule_equivalent_b',
+      const agreementB: MerchantFeeRule = {
+        id: 'agreement_promotional_special',
         version: 1,
         acquirerId: 'acq_boc',
         cardScheme: 'visa',
         effectiveFrom: '2026-01-01T00:00:00Z',
-        feeStructure: { rateBasisPoints: 200 }, // Identical rate
+        feeStructure: { rateBasisPoints: 200 }, // Same rate, but different contractual agreements
       };
 
-      const resForward = calculateFeeEstimate(BASE_TRANSACTION, [ruleA, ruleB]);
-      const resReverse = calculateFeeEstimate(BASE_TRANSACTION, [ruleB, ruleA]);
+      // In financial calculation engines, choosing arbitrarily by alphabet produces misleading attribution.
+      // Must throw RuleConflictError to require explicit developer priority or distinct date windows.
+      expect(() => calculateFeeEstimate(BASE_TRANSACTION, [agreementA, agreementB])).toThrow(
+        RuleConflictError
+      );
+      expect(() => calculateFeeEstimate(BASE_TRANSACTION, [agreementB, agreementA])).toThrow(
+        RuleConflictError
+      );
+    });
 
-      // Both must pick the exact same rule ID deterministically
-      expect(resForward.appliedRule.id).toBe(resReverse.appliedRule.id);
+    it('evaluates duplicate rule entries with identical rule IDs deterministically without conflict', () => {
+      const duplicateA1 = { ...BASE_RULE };
+      const duplicateA2 = { ...BASE_RULE };
+
+      const resForward = calculateFeeEstimate(BASE_TRANSACTION, [duplicateA1, duplicateA2]);
+      const resReverse = calculateFeeEstimate(BASE_TRANSACTION, [duplicateA2, duplicateA1]);
+
+      expect(resForward.appliedRule.id).toBe(BASE_RULE.id);
+      expect(resReverse.appliedRule.id).toBe(BASE_RULE.id);
       expect(resForward.totalFeeMinor).toBe(resReverse.totalFeeMinor);
     });
 
@@ -681,6 +695,17 @@ describe('Dynamic Fee Calculation Engine (@trivio.ink/core)', () => {
       expect(result.appliedRule.snapshot.rateBasisPoints).toBe(250);
       expect(result.appliedRule.snapshot.fixedFeeMinor).toBe(0);
       expect(result.appliedRule.snapshot.effectiveFrom).toBe('2026-01-01T00:00:00.000Z');
+      expect(result.appliedRule.snapshot.calculationPolicy).toBe('trivio-mdr-v1-half-up');
+
+      // Genuine runtime immutability verification (Object.isFrozen)
+      expect(Object.isFrozen(result.appliedRule.snapshot)).toBe(true);
+      expect(Object.isFrozen(result.breakdown)).toBe(true);
+
+      // Attempted mutation throws in strict mode
+      expect(() => {
+        // @ts-expect-error Testing runtime immutability on frozen snapshot
+        result.appliedRule.snapshot.rateBasisPoints = 9999;
+      }).toThrow(TypeError);
     });
 
     it('does not mutate input transaction or rules objects', () => {

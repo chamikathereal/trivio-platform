@@ -116,26 +116,6 @@ export function isRuleEligible(rule: NormalizedFeeRule, tx: NormalizedTransactio
 }
 
 /**
- * Checks whether two fee structures have identical arithmetic effects.
- */
-function areFeeStructuresEquivalent(a: NormalizedFeeRule['feeStructure'], b: NormalizedFeeRule['feeStructure']): boolean {
-  if (a.rateBasisPoints !== b.rateBasisPoints) return false;
-  if ((a.fixedFeeMinor ?? 0) !== (b.fixedFeeMinor ?? 0)) return false;
-  if (a.minFeeMinor !== b.minFeeMinor) return false;
-  if (a.maxFeeMinor !== b.maxFeeMinor) return false;
-
-  const aTax = a.taxAdjustment;
-  const bTax = b.taxAdjustment;
-  if (Boolean(aTax) !== Boolean(bTax)) return false;
-  if (aTax && bTax) {
-    if ((aTax.rateBasisPoints ?? 0) !== (bTax.rateBasisPoints ?? 0)) return false;
-    if ((aTax.fixedMinor ?? 0) !== (bTax.fixedMinor ?? 0)) return false;
-  }
-
-  return true;
-}
-
-/**
  * Selects the single most specific, highest-priority matching fee rule for a transaction.
  *
  * @param rules - List of candidate normalized fee rules.
@@ -187,14 +167,16 @@ export function findMatchingRule(
   const best = eligibleCandidates[0]!;
 
   // Conflict detection:
-  // Check if any subsequent candidate has the EXACT same priority and specificity
-  // but a DIFFERENT feeStructure
+  // Check if any distinct rule has the EXACT same priority and specificity.
+  // In financial settlement systems, choosing arbitrarily between different agreement rules with distinct IDs
+  // (even if fee structures are currently equivalent) produces misleading contract attribution.
+  // Therefore, distinct rule agreements that tie in priority and specificity are strictly rejected.
   const conflicting = eligibleCandidates.filter(
     (c) =>
       c !== best &&
       c.rule.priority === best.rule.priority &&
       c.specificityScore === best.specificityScore &&
-      !areFeeStructuresEquivalent(c.rule.feeStructure, best.rule.feeStructure)
+      c.rule.id !== best.rule.id
   );
 
   if (conflicting.length > 0) {
