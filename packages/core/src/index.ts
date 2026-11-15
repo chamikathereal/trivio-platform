@@ -135,3 +135,17 @@ export {
   isSettlementPolicyEligible,
   findMatchingSettlementPolicy,
 } from './settlement/index.js';
+
+// 13. Stage 2C Integrated Settlement Engine
+export {
+  calculatePaymentSettlementEstimate,
+  DEFAULT_INTEGRATED_CALCULATION_VERSION,
+} from './integrated/index.js';
+
+// 14. Stage 2C Integrated Types
+export type {
+  IntegratedTransactionInput,
+  IntegratedSettlementConfig,
+  IntegratedSettlementOptions,
+  IntegratedSettlementEstimateResult,
+} from './integrated/index.js';
