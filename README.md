@@ -125,7 +125,8 @@ console.log(result);
 
 | Milestone | Status | Description |
 | :--- | :---: | :--- |
-| **Stage 1** | **Completed** | Monorepo foundation, npm Workspaces, CI, SDK packages, and documentation |
+| **Stage 1** | **Completed** | Monorepo foundation, npm Workspaces, CI, SDK packages, and documentation (Merged via PR #1) |
+| **Stage 1.1** | **Completed** | Development governance, AGENTS.md, PR quality gate, repository hardening |
 | **Stage 2** | *Planned* | Comprehensive settlement engine, multi-tier MDR, card scheme fees, tax levies |
 | **Stage 3** | *Planned* | Multi-platform developer SDKs and middleware |
 | **Stage 4** | *Planned* | Next.js merchant console, documentation portal, and marketing site |
