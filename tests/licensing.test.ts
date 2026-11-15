@@ -39,13 +39,13 @@ describe('Stage 3C-B1: Licensing & Intellectual Property Boundaries', () => {
     }
   });
 
-  it('all package manifests specify "license": "Apache-2.0" and retain "private": true', () => {
+  it('all package manifests specify "license": "Apache-2.0" and are prepared for public distribution', () => {
     for (const pkg of PACKAGES) {
       const manifestPath = path.join(REPO_ROOT, 'packages', pkg, 'package.json');
       const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
 
       expect(manifest.license).toBe('Apache-2.0');
-      expect(manifest.private).toBe(true);
+      expect(manifest.private).toBeFalsy();
       expect(manifest.files).toContain('dist');
       expect(manifest.files).toContain('README.md');
       expect(manifest.files).toContain('LICENSE');

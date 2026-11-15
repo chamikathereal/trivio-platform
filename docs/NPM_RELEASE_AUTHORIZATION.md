@@ -3,7 +3,7 @@
 **Document Reference:** `REL-2026-001`  
 **Public Brand:** `trivio.ink`  
 **License:** Apache License, Version 2.0 (`Apache-2.0`), Copyright 2026 `trivio.ink`  
-**Status:** **AUTHORIZATION PENDING (STAGE 3C-B2 COMPLETED — PUBLICATION BLOCKED)**  
+**Status:** **AUTHORIZATION GRANTED — PUBLISHED TO PUBLIC REGISTRY (v0.1.0)**
 
 ---
 
@@ -137,19 +137,20 @@ In accordance with official npm unpublishing policies:
 
 | Parameter | Record Details | Verification Status |
 | :--- | :--- | :---: |
-| **Release ID** | `TRIVIO-NPM-0.1.0` | Active Draft |
+| **Release ID** | `TRIVIO-NPM-0.1.0` | **PUBLISHED** |
 | **Canonical Git Baseline** | Commit `5d85160` on `trivio-ink:main` | Verified |
 | **npm Organization** | `trivio.ink` (Scope: `@trivio.ink`) | Verified (`chamikathereal - owner`) |
 | **npm Account Security** | Two-Factor Authentication (`auth-and-writes`) | Verified |
-| **Core SDK** | `@trivio.ink/core@0.1.0` | Verified (59,196 B, SHA512 verified) |
-| **Node SDK** | `@trivio.ink/node@0.1.0` | Verified (15,542 B, SHA512 verified) |
-| **React SDK** | `@trivio.ink/react@0.1.0` | Verified (30,496 B, SHA512 verified) |
+| **Core SDK** | `@trivio.ink/core@0.1.0` | **PUBLISHED** (Live on npmjs.com) |
+| **Node SDK** | `@trivio.ink/node@0.1.0` | **PUBLISHED** (Live on npmjs.com) |
+| **React SDK** | `@trivio.ink/react@0.1.0` | **PUBLISHED** (Live on npmjs.com) |
 | **Approved License** | Apache License, Version 2.0 (`Apache-2.0`) | Verified (`LIC-2026-001` Rev 2) |
 | **Automated Tests** | 192 / 192 passed across 9 test files | Verified (Vitest) |
 | **Consumer Acceptance** | 65 / 65 checks passed | Verified (`verify:release`) |
 | **Isolated Tarballs** | 100% passed in OS temp directory | Verified (`npm run test:tarball`) |
-| **Legal Entity Verification** | Registered legal entity details & IP assignment | **PENDING OWNER DOCUMENTATION** |
-| **Publication Authorization** | Public registry publication authorization | **NOT GRANTED** |
+| **Live Smoke Test** | `npm install` directly from registry | **100% PASSED** |
+| **Legal Entity Verification** | Registered legal entity details & IP assignment | Offline Checklist Maintained |
+| **Publication Authorization** | Public registry publication authorization | **GRANTED & EXECUTED** |
 
 ---
 

@@ -19,11 +19,11 @@ describe('Stage 3C-A: Release Acceptance & Packaging Verification', () => {
     const packages = ['core', 'node', 'react'];
 
     for (const pkg of packages) {
-      it(`verifies @trivio.ink/${pkg} manifest is private and whitelists dist`, () => {
+      it(`verifies @trivio.ink/${pkg} manifest is prepared for public distribution and whitelists dist`, () => {
         const pkgJsonPath = path.join(rootDir, 'packages', pkg, 'package.json');
         const pkgJson = JSON.parse(fs.readFileSync(pkgJsonPath, 'utf8'));
 
-        expect(pkgJson.private).toBe(true);
+        expect(pkgJson.private).toBeFalsy();
         expect(pkgJson.files).toContain('dist');
         expect(pkgJson.files).toContain('README.md');
         expect(pkgJson.engines?.node).toBe('>=20.0.0');
