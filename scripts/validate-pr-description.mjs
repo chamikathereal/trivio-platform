@@ -130,39 +130,40 @@ export function validatePrDescription(body) {
     };
   }
 
-  // Parse sections by top-level ## headers
+  // Parse markdown headings and section boundaries using heading hierarchy
   const lines = body.split('\n');
-  const sections = [];
-  let currentSection = null;
-
-  for (const line of lines) {
-    const headerMatch = line.match(/^##\s+(.*)$/);
-    if (headerMatch) {
-      if (currentSection) {
-        sections.push(currentSection);
+  const headings = lines
+    .map((line, lineIndex) => {
+      const headerMatch = line.match(/^(#{2,6})\s+(.*)$/);
+      if (!headerMatch) {
+        return null;
       }
-      currentSection = {
-        title: headerMatch[1].trim(),
-        contentLines: [],
+
+      return {
+        lineIndex,
+        level: headerMatch[1].length,
+        title: headerMatch[2].trim(),
       };
-    } else if (currentSection) {
-      currentSection.contentLines.push(line);
-    }
-  }
-  if (currentSection) {
-    sections.push(currentSection);
-  }
+    })
+    .filter(Boolean);
 
   // Verify each required section
   for (const req of REQUIRED_SECTIONS) {
-    const matchedSection = sections.find((s) => req.pattern.test(`## ${s.title}`));
+    const matchedSection = headings.find((h) => req.pattern.test(`${'#'.repeat(h.level)} ${h.title}`));
 
     if (!matchedSection) {
       errors.push(`Missing required section: "${req.title}" (Section ${req.id})`);
       continue;
     }
 
-    const content = matchedSection.contentLines.join('\n');
+    const nextSiblingOrParentHeading = headings.find(
+      (h) => h.lineIndex > matchedSection.lineIndex && h.level <= matchedSection.level
+    );
+
+    const contentStart = matchedSection.lineIndex + 1;
+    const contentEnd = nextSiblingOrParentHeading ? nextSiblingOrParentHeading.lineIndex : lines.length;
+    const content = lines.slice(contentStart, contentEnd).join('\n');
+
     if (!isMeaningfulContent(content)) {
       errors.push(
         `Section "${req.title}" (Section ${req.id}) contains no meaningful content or only unfilled placeholder comments.`
