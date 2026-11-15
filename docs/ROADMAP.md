@@ -54,17 +54,31 @@
 
 ---
 
-## Stage 2B: Dynamic Settlement Calendar Engine (Next)
+## Stage 2B: Dynamic Settlement Calendar Engine (Completed)
 
-**Goal:** Build deterministic settlement cycle and bank holiday calendar intelligence.
+**Goal:** Build deterministic settlement cycle and bank holiday calendar intelligence in `@trivio.ink/core`.
 
-- [ ] Acquirer settlement cycle modeling (T+0, T+1, T+2, T+3, weekly, monthly batches)
-- [ ] Bank cutoff windows and weekend rollover logic
-- [ ] Configurable bank holiday calendar datasets
-- [ ] Net credit settlement deposit date projections
-- [ ] Multi-currency minor-unit conversion helpers with zero float drift
-- [ ] Settlement calendar adjustments (bank holidays, weekend shifts, T+1/T+2/T+3 cycle projections)
-- [ ] Comprehensive scenario test suites with bank reconciliation edge cases
+- [x] Acquirer settlement cycle modeling (T+0, T+1, T+2, general T+N)
+- [x] Business-day and calendar-day cycle advancement models
+- [x] POS batch cut-off time windows and boundary evaluations
+- [x] Weekend and non-working-day rollover logic ('following_business_day', 'preceding_business_day', 'no_adjustment')
+- [x] Configurable working weekdays and developer-/merchant-supplied holiday calendars
+- [x] Timezone-safe date decomposition using native ECMAScript Intl with IANA identifiers
+- [x] Deterministic settlement policy matching with criteria specificity scoring and conflict detection
+- [x] Immutable historical policy snapshots (`deepFreeze`)
+- [x] Comprehensive automated test coverage (35 new tests covering all 8 prompt reference examples, edge cases, leap years, DST)
+- [x] 122 total automated unit tests passing across all packages (100% pass rate)
+
+---
+
+## Stage 2C: Integrated Merchant Fee and Settlement Intelligence Engine (Next)
+
+**Goal:** Combine dynamic fee calculation and settlement calendar forecasting into a unified, high-level developer orchestration API.
+
+- [ ] Unified financial calculation primitive combining MDR deductions and bank deposit projections
+- [ ] Composite calculation result model with complete fee ledger breakdown and settlement timeline
+- [ ] End-to-end reconciliation scenario modeling for multi-acquirer retail and e-commerce setups
+- [ ] Full backward compatibility with Stage 2A (`calculateFeeEstimate`) and Stage 2B (`estimateSettlementDate`)
 
 ---
 
