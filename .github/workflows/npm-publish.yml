@@ -1,5 +1,21 @@
 name: npm Trusted Release (Draft Architecture)
 
+# ==============================================================================
+# TRIVIO RELEASE SECURITY GOVERNANCE
+# ==============================================================================
+# 1. This workflow triggers ONLY via explicit manual dispatch (workflow_dispatch).
+#    It NEVER triggers on ordinary git push or pull request merge.
+# 2. Publication capability is permanently safety-gated:
+#    - Dry-run is enforced by default.
+#    - Non-dry-run requires the 'npm-release' protected GitHub environment.
+#    - Real execution requires manual approval by authorized reviewers configured
+#      under GitHub Repository Settings -> Environments -> npm-release.
+# 3. Before activating this workflow for future releases (e.g. v0.2.0):
+#    - The owner must configure GitHub Environment: 'npm-release' with Required Reviewers.
+#    - The owner must register GitHub Actions as a Trusted Publisher on npmjs.com
+#      for each package (@trivio.ink/core, @trivio.ink/node, @trivio.ink/react).
+# ==============================================================================
+
 on:
   workflow_dispatch:
     inputs:
@@ -14,10 +30,15 @@ on:
           - '@trivio.ink/node'
           - '@trivio.ink/react'
       dry_run:
-        description: 'Run in dry-run mode without publishing'
+        description: 'Run in dry-run mode without publishing (Enforced default)'
         required: true
         default: true
         type: boolean
+      confirmation_token:
+        description: 'Type "AUTHORIZE_TRIVIO_RELEASE" to confirm authorization'
+        required: false
+        default: ''
+        type: string
 
 permissions:
   contents: read
@@ -31,6 +52,7 @@ jobs:
   verify:
     name: Verify Release Baseline
     runs-on: ubuntu-latest
+    if: github.repository == 'trivio-ink/trivio-platform' && github.ref == 'refs/heads/main'
     steps:
       - name: Checkout canonical main
         uses: actions/checkout@v4
@@ -63,6 +85,7 @@ jobs:
     needs: verify
     runs-on: ubuntu-latest
     environment: npm-release
+    if: github.repository == 'trivio-ink/trivio-platform' && github.ref == 'refs/heads/main'
     steps:
       - name: Checkout canonical main
         uses: actions/checkout@v4
@@ -89,7 +112,11 @@ jobs:
             npm publish --workspace=@trivio.ink/node --access=public --dry-run
             npm publish --workspace=@trivio.ink/react --access=public --dry-run
           else
+            if [ "${{ inputs.confirmation_token }}" != "AUTHORIZE_TRIVIO_RELEASE" ]; then
+              echo "Error: confirmation_token mismatch. Expected 'AUTHORIZE_TRIVIO_RELEASE'."
+              exit 1
+            fi
             echo "Real release requires active npm Trusted Publisher configuration."
-            echo "Skipping actual publish until v0.1.1 is scheduled."
+            echo "Actual npm publish is disabled until authorized by the repository owner."
             exit 1
           fi

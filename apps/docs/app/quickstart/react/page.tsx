@@ -13,34 +13,34 @@ const reactExample = `import React from "react";
 import { 
   TrivioSettlementSummary, 
   TrivioFeeBreakdown,
+  formatCurrency,
   formatMinorAmount,
-  TRIVIO_CURRENCY_EXPONENTS 
+  getCurrencyDecimals,
+  type IntegratedSettlementEstimateResult
 } from "@trivio.ink/react";
 
-export function TransactionPayoutCard({ estimate }) {
+export function TransactionPayoutCard({ estimate }: { estimate: IntegratedSettlementEstimateResult }) {
   return (
     <div className="rounded-lg border border-gray-800 bg-gray-900 p-6 space-y-6">
       {/* 1. Complete settlement breakdown tree */}
-      <TrivioSettlementSummary 
-        estimate={estimate} 
-        currency="USD" 
+      <TrivioSettlementSummary
+        estimate={estimate}
+        currencyCode="USD"
       />
 
       {/* 2. Itemized percentage and fixed fee breakdown */}
       <TrivioFeeBreakdown
-        grossMinor={estimate.grossMinor}
-        percentageBps={250} // 2.50%
-        fixedFeeMinor={1500} // $15.00
-        currency="USD"
+        estimate={estimate}
+        currencyCode="USD"
       />
 
       {/* 3. Direct currency formatting helper */}
       <p className="text-xs text-gray-400">
-        Net deposit: {formatMinorAmount(estimate.netMinor, "USD")}
+        Net deposit: {formatCurrency(estimate.netMinor, "USD")}
       </p>
     </div>
   );
-}`;
+};`;
 
 export default function ReactQuickStartPage() {
   return (
@@ -73,9 +73,10 @@ export default function ReactQuickStartPage() {
             The React SDK avoids naive <code className="text-gray-300 font-mono">/ 100</code> division by referencing the official ISO 4217 currency exponent table:
           </p>
           <div className="rounded-lg border border-trivio-border bg-trivio-navy/60 p-4 text-xs space-y-1 font-mono text-gray-300">
-            <p>formatMinorAmount(1500, &apos;JPY&apos;) -&gt; &apos;JPY 1,500&apos; (0 decimals)</p>
-            <p>formatMinorAmount(1000000, &apos;USD&apos;) -&gt; &apos;USD 10,000.00&apos; (2 decimals)</p>
-            <p>formatMinorAmount(1500, &apos;BHD&apos;) -&gt; &apos;BHD 1.500&apos; (3 decimals)</p>
+            <p>formatCurrency(1500, &apos;JPY&apos;) -&gt; &apos;JPY 1500&apos; (0 decimals via getCurrencyDecimals)</p>
+            <p>formatCurrency(1000000, &apos;USD&apos;) -&gt; &apos;USD 10,000.00&apos; (2 decimals)</p>
+            <p>formatCurrency(1500, &apos;BHD&apos;) -&gt; &apos;BHD 1.500&apos; (3 decimals)</p>
+            <p>formatMinorAmount(1000000, 2) -&gt; &apos;10000.00&apos; (direct decimal string)</p>
           </div>
         </div>
       </div>

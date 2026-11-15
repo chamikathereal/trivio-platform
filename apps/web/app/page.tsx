@@ -295,7 +295,7 @@ export default function HomePage() {
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle className="w-4 h-4 text-emerald-400" />
-                <span>Explicit rounding policy (Round-Half-Even / Banker&apos;s Rounding)</span>
+                <span>Explicit deterministic rounding policy (Round-Half-Up)</span>
               </div>
             </div>
           </div>
