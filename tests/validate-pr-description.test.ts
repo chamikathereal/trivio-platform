@@ -96,6 +96,14 @@ describe('PR Description Validator (Stage 1.1)', () => {
     expect(result.errors).toHaveLength(0);
   });
 
+  it('accepts required sections when top-level headings use level-3 markdown', () => {
+    const level3SectionHeadingsPR = VALID_SAMPLE_PR.replace(/^### /gm, '#### ').replace(/^## /gm, '### ');
+
+    const result = validatePrDescription(level3SectionHeadingsPR);
+    expect(result.valid).toBe(true);
+    expect(result.errors).toHaveLength(0);
+  });
+
   it('rejects an empty PR body', () => {
     const result = validatePrDescription('');
     expect(result.valid).toBe(false);
