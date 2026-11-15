@@ -16,7 +16,10 @@ Welcome to the Trivio Platform developer guide. This document details local envi
 ```
 trivio-platform/
 ├── .github/          # GitHub Actions CI and issue/PR templates
-├── apps/             # Future Next.js and NestJS applications (Placeholders in Stage 1)
+│   └── workflows/
+│       ├── ci.yml               # Automated build, typecheck, and unit test CI
+│       └── pr-description.yml   # PR description quality gate
+├── apps/             # Future Next.js and NestJS applications (Placeholders in Stage 1 & 1.1)
 │   ├── web/          # Public marketing & calculator portal
 │   ├── console/      # Merchant developer dashboard
 │   ├── docs/         # Developer documentation hub
@@ -25,17 +28,23 @@ trivio-platform/
 │   ├── core/         # @trivio.ink/core: Pure mathematical & settlement engine
 │   ├── node/         # @trivio.ink/node: Server-side Node.js SDK foundation
 │   └── react/        # @trivio.ink/react: Reusable UI settlement components
+├── scripts/          # Zero-dependency maintenance and validation scripts
+│   └── validate-pr-description.mjs # PR description validator
+├── tests/            # Monorepo tooling and integration tests
 └── docs/             # Architecture, design systems, roadmaps
 ```
 
 ## 3. Initial Setup
 
-Clone the repository and install dependencies at the repository root:
+Clone your developer fork and configure git remotes:
 
 ```bash
-# Clone the repository
+# Clone the developer fork
 git clone https://github.com/chamikathereal/trivio-platform.git
 cd trivio-platform
+
+# Add the upstream organization repository
+git remote add upstream https://github.com/trivio-ink/trivio-platform.git
 
 # Install dependencies and link workspaces
 npm install
@@ -69,7 +78,36 @@ npm run build -w @trivio.ink/node
 npm run typecheck -w @trivio.ink/react
 ```
 
-## 5. Engineering Principles
+### Validating PR Descriptions Locally
+
+Before opening a pull request, test your PR markdown description against the governance validator:
+
+```bash
+# Test a local markdown file
+node scripts/validate-pr-description.mjs --file my_pr_description.md
+
+# Or pass the markdown text directly
+node scripts/validate-pr-description.mjs --body "## 1. Executive Summary..."
+```
+
+## 5. The 14-Step Fork Development Workflow
+
+1. `git fetch upstream`
+2. `git checkout main && git merge --ff-only upstream/main`
+3. `git switch -c feat/my-feature`
+4. Implement scoped changes.
+5. `npm run check`
+6. Update documentation and `AGENTS.md`.
+7. `git commit -m "feat(scope): concise description"`
+8. `git push -u origin feat/my-feature`
+9. Open a Pull Request targeting `trivio-ink/trivio-platform:main`.
+10. Fill out all 13 sections in `.github/pull_request_template.md`.
+11. Confirm CI checks (`CI` and `PR Description Validator`) pass.
+12. Review code diff.
+13. Merge after approval.
+14. Synchronize fork `main` with upstream.
+
+## 6. Engineering & Security Principles
 
 ### A. Zero-Float Arithmetic
 Never use floating-point math for financial figures. Always use integer minor currency units (e.g. `1000000` for 10,000.00) and `BigInt` intermediate precision.
@@ -80,5 +118,5 @@ All fee calculation functions must explicitly define and document their rounding
 ### C. Developer-Owned Data Model
 Core libraries must remain zero-dependency and executable completely offline. Do not introduce mandatory cloud telemetry or require database connections for core calculations.
 
-### D. Private Packages
-During Stage 1 and early development, all packages are flagged `"private": true`. Do not publish packages to npm until officially authorized.
+### D. Repository Visibility Stance
+Both `trivio-ink/trivio-platform` and forks are **public repositories**. Never commit client data, private keys, live bank tokens, `.env` files, or unannounced commercial agreements.
