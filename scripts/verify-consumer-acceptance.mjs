@@ -45,7 +45,7 @@ async function run() {
     const pkgJsonPath = path.join(rootDir, 'packages', pkg, 'package.json');
     const pkgJson = JSON.parse(fs.readFileSync(pkgJsonPath, 'utf8'));
 
-    assert(pkgJson.private === true, `@trivio.ink/${pkg} retains "private": true`);
+    assert(!pkgJson.private, `@trivio.ink/${pkg} is ready for public distribution`);
     assert(pkgJson.license === 'Apache-2.0', `@trivio.ink/${pkg} specifies "license": "Apache-2.0"`);
     assert(
       Array.isArray(pkgJson.files) && pkgJson.files.includes('dist'),

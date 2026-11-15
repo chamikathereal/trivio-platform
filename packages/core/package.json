@@ -1,7 +1,6 @@
 {
   "name": "@trivio.ink/core",
   "version": "0.1.0",
-  "private": true,
   "description": "Deterministic, zero-dependency payment settlement calculation engine for Trivio",
   "homepage": "https://trivio.ink",
   "repository": {

@@ -1,7 +1,6 @@
 {
   "name": "@trivio.ink/react",
   "version": "0.1.0",
-  "private": true,
   "description": "Reusable React UI components and hooks for Trivio payment settlement intelligence",
   "homepage": "https://trivio.ink",
   "repository": {
