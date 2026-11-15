@@ -5,6 +5,7 @@
   "description": "Trivio Marketing Website & Interactive Calculator",
   "scripts": {
     "dev": "next dev --port 3000",
+    "prebuild": "npm run --prefix ../.. build:packages",
     "build": "next build",
     "start": "next start --port 3000",
     "typecheck": "tsc --noEmit"
