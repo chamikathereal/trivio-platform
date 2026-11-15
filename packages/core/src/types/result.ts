@@ -84,6 +84,11 @@ export interface AppliedRuleSnapshot {
     fixedMinor?: number;
     name?: string;
   };
+  /**
+   * Deterministic rounding and calculation policy used during execution
+   * (e.g. 'trivio-mdr-v1-half-up').
+   */
+  calculationPolicy: string;
 }
 
 /**
