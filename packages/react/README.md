@@ -11,9 +11,10 @@
 ### Core Architectural Principles
 - **Pure Dependency Isolation:** Depends strictly on `@trivio.ink/core` and React peer dependencies (`react >= 18.0.0`). Never imports `@trivio.ink/node` into browser code.
 - **Zero-Float Financial Math:** All components receive integer minor currency units (e.g. `1000000` for `10,000.00`) and format using exact string manipulation with zero IEEE-754 floating-point inaccuracies.
+- **Zero Default MDR Rates:** Components strictly reject unconfigured fee agreements. Missing rates throw `TrivioValidationError` rather than silently assuming zero or fallback rates.
 - **Zero CSS-in-JS Overhead:** Pre-styled using zero-runtime inline CSS custom property palettes with official Trivio brand tokens. Works out of the box with zero stylesheet imports or Tailwind setup.
-- **SSR & Framework Agnostic:** 100% server-side rendering (SSR) compatible with Next.js (App Router & Pages Router), Remix, Vite, and Astro. Safe execution with zero browser global leaks.
-- **WCAG 2.2 AA Accessible:** Built with semantic HTML elements (`<article>`, `<header>`, `<section>`, `<dl>`, `<dt>`, `<dd>`, `<ol>`, `<li>`, `<time>`), accessible contrast ratios (>15:1 for Electric Cyan on Midnight Navy), and screen-reader status announcements.
+- **SSR-Safe Architecture:** Built with pure ESM and zero references to browser globals (`window`, `document`) during module evaluation or server rendering. *(Note: Full cross-framework matrix testing across Vite, Remix, and Astro is unverified pending Stage 3C package acceptance).*
+- **Accessibility-First Semantic Markup:** Structured using semantic HTML5 elements (`<article>`, `<header>`, `<section>`, `<dl>`, `<dt>`, `<dd>`, `<ol>`, `<li>`, `<time>`), accessible contrast ratios, and screen-reader status announcements. *(Note: Formal WCAG 2.2 AA certification is pending independent live browser audits in Stage 4).*
 
 ---
 

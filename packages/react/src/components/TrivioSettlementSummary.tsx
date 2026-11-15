@@ -10,6 +10,7 @@ import type { TrivioSettlementSummaryProps } from '../types.js';
 import { useTrivio } from '../context.js';
 import { formatCurrency, formatDisplayDate } from '../formatters.js';
 import { getCardStyle, getBadgeStyle, getThemePalette } from '../theme.js';
+import { TrivioValidationError } from '@trivio.ink/core';
 
 /**
  * Compact settlement summary presentation component.
@@ -40,6 +41,12 @@ export function TrivioSettlementSummary({
   showDisclaimer = true,
   testId = 'trivio-settlement-summary',
 }: TrivioSettlementSummaryProps): React.JSX.Element {
+  if (!estimate && propGross === undefined && propFee === undefined && propNet === undefined) {
+    throw new TrivioValidationError(
+      'TrivioSettlementSummary requires either a valid estimate or explicit (grossMinor, feeMinor, netMinor). Trivio does not permit unconfigured settlement values.'
+    );
+  }
+
   const context = useTrivio();
   const theme = propTheme ?? context.theme ?? 'dark';
   const palette = getThemePalette(theme);

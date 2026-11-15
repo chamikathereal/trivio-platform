@@ -12,6 +12,7 @@ import type {
 import { useTrivio } from '../context.js';
 import { formatDisplayDate } from '../formatters.js';
 import { getCardStyle, getBadgeStyle, getThemePalette } from '../theme.js';
+import { TrivioValidationError } from '@trivio.ink/core';
 
 /**
  * Visual settlement progress timeline component.
@@ -34,6 +35,12 @@ export function TrivioSettlementTimeline({
   className = 'trivio-settlement-timeline',
   testId = 'trivio-settlement-timeline',
 }: TrivioSettlementTimelineProps): React.JSX.Element {
+  if (!customSteps && !estimate && !propSettlementResult) {
+    throw new TrivioValidationError(
+      'TrivioSettlementTimeline requires either an estimate, settlementDateResult, or customSteps. Trivio does not permit unconfigured settlement timelines.'
+    );
+  }
+
   const context = useTrivio();
   const theme = propTheme ?? context.theme ?? 'dark';
   const palette = getThemePalette(theme);

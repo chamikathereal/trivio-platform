@@ -8,7 +8,6 @@ import type { TrivioContextValue, TrivioProviderProps } from './types.js';
 
 const defaultContextValue: TrivioContextValue = {
   currencyCode: 'USD',
-  defaultRateBps: 0,
   theme: 'dark',
   locale: 'en-US',
 };
@@ -17,7 +16,8 @@ const TrivioContext = createContext<TrivioContextValue>(defaultContextValue);
 
 /**
  * Context provider establishing configuration defaults for Trivio settlement components.
- * Configures default currency, fee rate fallback, theme, and locale across child component trees.
+ * Configures default display currency, theme, and locale across child component trees.
+ * Never stores or assumes financial fee rates.
  *
  * @example
  * <TrivioProvider currencyCode="LKR" theme="dark">
@@ -26,7 +26,6 @@ const TrivioContext = createContext<TrivioContextValue>(defaultContextValue);
  */
 export function TrivioProvider({
   currencyCode = 'USD',
-  defaultRateBps = 0,
   theme = 'dark',
   locale = 'en-US',
   children,
@@ -34,11 +33,10 @@ export function TrivioProvider({
   const value = useMemo<TrivioContextValue>(
     () => ({
       currencyCode,
-      defaultRateBps,
       theme,
       locale,
     }),
-    [currencyCode, defaultRateBps, theme, locale]
+    [currencyCode, theme, locale]
   );
 
   return React.createElement(TrivioContext.Provider, { value }, children);
