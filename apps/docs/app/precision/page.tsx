@@ -1,0 +1,62 @@
+import Link from "next/link";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { CodeBlock } from "@/components/code-block";
+import { ArrowRight, ArrowLeft } from "lucide-react";
+
+export const metadata = {
+  title: "Zero-Float Monetary Precision — Trivio Docs",
+  description: "Mandatory zero-float financial arithmetic, minor units, and banker's rounding.",
+};
+
+const precisionExample = `// ❌ Prohibited floating-point calculation:
+// 10000.00 * 0.029 = 289.99999999999994 (Floating point drift!)
+
+// ✅ Trivio deterministic integer calculation:
+const grossMinor = 1000000n; // 10,000.00
+const rateBps = 290n;        // 2.90%
+const percentageFee = (grossMinor * rateBps + 5000n) / 10000n; // Exact banker's rounding`;
+
+export default function PrecisionDocumentationPage() {
+  return (
+    <div className="space-y-8">
+      <div className="space-y-2 border-b border-trivio-border pb-6">
+        <Badge variant="cyan">Financial Primitives</Badge>
+        <h1 className="text-3xl font-extrabold text-trivio-warm">Zero-Float Monetary Precision</h1>
+        <p className="text-sm text-gray-400">
+          Why Trivio enforces minor currency units and BigInt intermediate precision.
+        </p>
+      </div>
+
+      <div className="space-y-6 text-sm text-gray-300 leading-relaxed">
+        <div>
+          <h2 className="text-base font-bold text-trivio-warm mb-2">The Danger of IEEE-754 Floats</h2>
+          <p className="text-xs text-gray-400 mb-3">
+            In standard JavaScript and TypeScript, <code className="text-gray-300 font-mono">0.1 + 0.2 === 0.30000000000000004</code>. In large-scale payment processing, accumulating fractional cent errors across millions of transactions leads to ledger imbalances and reconciliation failures.
+          </p>
+          <CodeBlock title="precision.ts" code={precisionExample} />
+        </div>
+
+        <div>
+          <h2 className="text-base font-bold text-trivio-warm mb-2">Rounding Policy</h2>
+          <p className="text-xs text-gray-400">
+            Trivio implements <strong>Round-Half-Even (Banker&apos;s Rounding)</strong> as its default arithmetic rounding policy, preventing systematic upward or downward fee creep across merchant portfolios.
+          </p>
+        </div>
+      </div>
+
+      <div className="pt-6 flex justify-between items-center border-t border-trivio-border">
+        <Button asChild variant="outline" size="sm">
+          <Link href="/timezones" className="gap-1.5">
+            <ArrowLeft className="w-4 h-4" /> Timezones & Cut-Offs
+          </Link>
+        </Button>
+        <Button asChild variant="default" size="sm">
+          <Link href="/errors" className="gap-1.5">
+            Error Handling <ArrowRight className="w-4 h-4" />
+          </Link>
+        </Button>
+      </div>
+    </div>
+  );
+}
