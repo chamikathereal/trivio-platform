@@ -204,8 +204,109 @@ const simple = estimatePercentageFee(1_000_000, 250);
 
 ---
 
-## 10. Limitations & Roadmap
+## 10. Dynamic Settlement Calendar Engine (Stage 2B)
 
-- **Authorization Estimates vs. Settlements:** Outputs are estimates at authorization time. Realized credit batches are subject to post-authorization banking adjustments.
-- **Settlement Schedules (Stage 2B):** T+1, T+2, bank holiday calendars, and weekend cut-off shift projections will be introduced in Stage 2B.
-- **Card Surcharges:** The core engine does not compute customer-facing checkout surcharges; it models merchant acquirer deductions.
+The settlement engine forecasts the date when merchant card transaction proceeds are expected to be credited to a merchant's bank account, based on developer- or merchant-configured agreements.
+
+### Core Settlement Concepts
+
+- **Transaction Time:** The exact instant when a transaction is authorized. Must be an explicit ISO 8601 string with UTC 'Z' or a numeric offset (e.g. `'2026-11-13T10:00:00+05:30'`). Bare local timestamps without timezone offsets are prohibited.
+- **Local Transaction Date & Time:** Decomposed locally inside the configured acquirer processing timezone (e.g. `'Asia/Colombo'`).
+- **Batch Cut-Off Time:** Daily window threshold (e.g. `'17:00'`). Transactions authorized before cut-off are eligible for same-day batch processing; transactions at or after cut-off roll to the next eligible business day.
+- **Anchor Processing Date:** The business date on which the acquirer anchors settlement calculation.
+- **Settlement Cycles (T+0, T+1, T+2, T+N):**
+  - **Business-day model (`cycleUnit: 'business_days'`):** Advances strictly across eligible business days, skipping weekends and configured bank holidays.
+  - **Calendar-day model (`cycleUnit: 'calendar_days'`):** Advances across sequential calendar days, applying the policy's adjustment convention (`following_business_day`, `preceding_business_day`, `no_adjustment`) if the target lands on a non-working day.
+
+### Usage Example: Estimating Bank Deposit Settlement Date
+
+```typescript
+import {
+  estimateSettlementDate,
+  type SettlementTransactionInput,
+  type SettlementPolicy,
+  type SettlementCalendar,
+} from '@trivio.ink/core';
+
+// 1. Transaction context
+const tx: SettlementTransactionInput = {
+  id: 'tx_retail_101',
+  transactionTime: '2026-11-13T10:00:00+05:30', // Friday morning before cut-off
+  acquirerId: 'ACQ_BOC',
+  currency: 'LKR',
+  merchantId: 'MCH_COLOMBO_RETAIL',
+};
+
+// 2. Working day and bank holiday calendar
+const calendar: SettlementCalendar = {
+  id: 'cal_colombo_commercial',
+  version: '2026.1',
+  timeZone: 'Asia/Colombo',
+  workingDays: [1, 2, 3, 4, 5], // Monday through Friday
+  holidays: ['2026-11-16'],     // Monday is a configured holiday
+  holidayLabels: { '2026-11-16': 'Special Bank Holiday' },
+};
+
+// 3. Acquirer settlement policy
+const policies: SettlementPolicy[] = [
+  {
+    id: 'pol_boc_standard_t1',
+    version: '1.0.0',
+    acquirerId: 'ACQ_BOC',
+    effectiveFrom: '2026-01-01',
+    priority: 0,
+    cycleLength: 1, // T+1
+    cycleUnit: 'business_days',
+    cutOffTime: '17:00',
+    timeZone: 'Asia/Colombo',
+    calendarId: 'cal_colombo_commercial',
+    nonWorkingDayConvention: 'following_business_day',
+  },
+];
+
+// 4. Calculate settlement estimate
+const forecast = estimateSettlementDate(tx, policies, [calendar]);
+
+console.log(forecast);
+// {
+//   transactionTime: '2026-11-13T10:00:00+05:30',
+//   acquirerId: 'ACQ_BOC',
+//   currency: 'LKR',
+//   timeZone: 'Asia/Colombo',
+//   localTransactionDate: '2026-11-13',
+//   localTransactionTime: '10:00:00',
+//   localWeekday: 5,
+//   isLocalTransactionWorkingDay: true,
+//   isPastCutOff: false,
+//   cutOffTime: '17:00:00',
+//   anchorProcessingDate: '2026-11-13',
+//   expectedSettlementDate: '2026-11-17', // Tuesday (Monday is holiday)
+//   settlementCycle: 'T+1',
+//   cycleLength: 1,
+//   cycleUnit: 'business_days',
+//   daysDeferred: 4,
+//   isEstimated: true,
+//   status: 'ESTIMATED',
+//   adjustments: [ ... ],
+//   appliedPolicy: { ... },
+//   calculationVersion: '2.2.0-core'
+// }
+```
+
+### Settlement Error Handling Reference
+
+| Error Class | Inherits From | Thrown When |
+| :--- | :--- | :--- |
+| `SettlementValidationError` | `TrivioValidationError` | Malformed date/time, missing timezone offset, invalid currency code |
+| `SettlementRangeError` | `TrivioRangeError` | Unrecognized IANA timezone, negative cycle length, impossible date |
+| `SettlementPolicyNotFoundError` | `TrivioError` | No eligible settlement agreement matches acquirer/currency/date |
+| `SettlementPolicyConflictError` | `TrivioError` | Distinct policies tie at identical priority and specificity |
+| `SettlementCalendarNotFoundError` | `TrivioError` | Matched policy references an unknown calendar ID |
+
+---
+
+## 11. Limitations & Roadmap
+
+- **Authorization Estimates vs. Settlements:** Forecasts represent estimated deposit dates based on contractual schedules. Actual bank credit batches are confirmed via bank reconciliation files.
+- **Card Surcharges:** The core engine does not compute customer-facing checkout surcharges; it models merchant acquirer deductions and deposit schedules.
+- **Stage 2C Integration:** Stage 2C will introduce a unified developer API combining fee deductions and settlement date projections.

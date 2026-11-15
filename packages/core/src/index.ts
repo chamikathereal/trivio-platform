@@ -76,3 +76,62 @@ export {
   estimatePercentageFee,
   type FeeEstimateResult,
 } from './legacy.js';
+
+// 10. Stage 2B Settlement Errors
+export {
+  SettlementPolicyNotFoundError,
+  SettlementPolicyConflictError,
+  SettlementCalendarNotFoundError,
+  SettlementValidationError,
+  SettlementRangeError,
+} from './settlement/index.js';
+
+// 11. Stage 2B Settlement Types
+export type {
+  CycleUnit,
+  NonWorkingDayHandlingConvention,
+  SettlementTransactionInput,
+  SettlementPolicy,
+  SettlementCalendar,
+  AppliedSettlementPolicySnapshot,
+  SettlementCalculationOptions,
+  SettlementEstimateResult,
+  ZonedDateTimeParts,
+  ParsedDate,
+  NormalizedSettlementTransaction,
+  NormalizedSettlementCalendar,
+  NormalizedSettlementPolicy,
+  MatchedSettlementPolicyCandidate,
+} from './settlement/index.js';
+
+// 12. Stage 2B Settlement Engine and Calendar Primitives
+export {
+  estimateSettlementDate,
+  DEFAULT_SETTLEMENT_CALCULATION_VERSION,
+  SETTLEMENT_SPECIFICITY_WEIGHTS,
+  MAX_CALENDAR_SEARCH_DAYS,
+  validateIanaTimeZone,
+  parseIsoTimestamp,
+  getZonedDateTimeParts,
+  parseISODate,
+  formatISODate,
+  getISOWeekday,
+  addCalendarDays,
+  daysBetween,
+  isHoliday,
+  isWorkingDay,
+  findEligibleWorkingDay,
+  getNextWorkingDay,
+  addBusinessDays,
+  adjustNonWorkingDay,
+  validateAndNormalizeSettlementTransaction,
+  validateAndNormalizeSettlementCalendar,
+  validateAndNormalizeSettlementCalendars,
+  validateAndNormalizeSettlementPolicy,
+  validateAndNormalizeSettlementPolicies,
+  normalizeCutOffTime,
+  arePoliciesIdentical,
+  calculateSettlementSpecificityScore,
+  isSettlementPolicyEligible,
+  findMatchingSettlementPolicy,
+} from './settlement/index.js';
