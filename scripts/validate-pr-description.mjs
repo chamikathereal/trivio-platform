@@ -119,7 +119,11 @@ export function validatePrDescription(body) {
     };
   }
 
-  const rawClean = stripHtmlComments(body);
+  // Normalize CRLF and CR to standard LF line terminators
+  // Web form submissions and Windows environments submit descriptions with CRLF
+  const normalizedBody = body.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+
+  const rawClean = stripHtmlComments(normalizedBody);
   if (rawClean.length < 50) {
     return {
       valid: false,
@@ -131,9 +135,10 @@ export function validatePrDescription(body) {
   }
 
   // Parse markdown headings and section boundaries using heading hierarchy
-  const lines = body.split('\n');
+  const lines = normalizedBody.split('\n');
   const headings = lines
     .map((line, lineIndex) => {
+      // Support markdown headings level 1 to 6 with optional leading indentation (up to 3 spaces per CommonMark)
       const headerMatch = line.match(/^\s{0,3}(#{1,6})\s+(.*)$/);
       if (!headerMatch) {
         return null;
@@ -142,6 +147,7 @@ export function validatePrDescription(body) {
       return {
         lineIndex,
         level: headerMatch[1].length,
+        // Trim trailing closing hashes (e.g., '## Title ##') and whitespace
         title: headerMatch[2].replace(/\s+#+\s*$/, '').trim(),
       };
     })

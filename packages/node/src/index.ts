@@ -6,15 +6,33 @@
 import {
   estimatePercentageFee,
   type FeeEstimateResult,
+  calculateFeeEstimate,
+  findMatchingRule,
+  type TransactionInput,
+  type MerchantFeeRule,
+  type DynamicFeeEstimateResult,
+  type FeeCalculationOptions,
   TrivioValidationError,
   TrivioRangeError,
+  RuleNotFoundError,
+  RuleConflictError,
+  NegativeNetSettlementError,
 } from '@trivio.ink/core';
 
 export {
   estimatePercentageFee,
   type FeeEstimateResult,
+  calculateFeeEstimate,
+  findMatchingRule,
+  type TransactionInput,
+  type MerchantFeeRule,
+  type DynamicFeeEstimateResult,
+  type FeeCalculationOptions,
   TrivioValidationError,
   TrivioRangeError,
+  RuleNotFoundError,
+  RuleConflictError,
+  NegativeNetSettlementError,
 };
 
 /**
@@ -23,7 +41,7 @@ export {
 export interface TrivioClientOptions {
   /**
    * Trivio Cloud API key (for future hosted cloud services).
-   * Optional in Stage 1; offline calculations do not require credentials.
+   * Optional in Stage 1 & 2A; offline calculations do not require credentials.
    */
   apiKey?: string;
 
@@ -57,7 +75,7 @@ export class TrivioClient {
   public readonly apiKey?: string;
   public readonly baseUrl: string;
   public readonly timeoutMs: number;
-  public readonly version: string = '0.1.0';
+  public readonly version: string = '0.2.0';
 
   constructor(options: TrivioClientOptions = {}) {
     if (options.apiKey !== undefined && typeof options.apiKey !== 'string') {
@@ -101,5 +119,21 @@ export class TrivioClient {
    */
   public calculateFee(grossMinor: number, rateBasisPoints: number): FeeEstimateResult {
     return estimatePercentageFee(grossMinor, rateBasisPoints);
+  }
+
+  /**
+   * Deterministic dynamic fee estimation evaluated against merchant agreement rules.
+   *
+   * @param transaction - Transaction details.
+   * @param rules - Configured merchant fee agreement rules.
+   * @param options - Calculation options.
+   * @returns Detailed calculation estimate and breakdown.
+   */
+  public calculateDynamicFee(
+    transaction: TransactionInput,
+    rules: MerchantFeeRule[],
+    options?: FeeCalculationOptions
+  ): DynamicFeeEstimateResult {
+    return calculateFeeEstimate(transaction, rules, options);
   }
 }

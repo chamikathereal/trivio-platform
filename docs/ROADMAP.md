@@ -21,9 +21,9 @@
 
 ---
 
-## Stage 1.1: Development Governance, CI Verification & Repository Hardening (Current)
+## Stage 1.1: Development Governance, CI Verification & Repository Hardening (Completed)
 
-**Goal:** Verify GitHub Actions execution, enforce mandatory PR quality gates, establish permanent agent rules, and harden the repository.
+**Goal:** Verify GitHub Actions execution, enforce mandatory PR quality gates, establish permanent agent rules, and harden the repository. (Merged via PR #2)
 
 - [x] Permanent coding agent instructions (`AGENTS.md`)
 - [x] 13-section mandatory Pull Request template (`.github/pull_request_template.md`)
@@ -36,13 +36,32 @@
 
 ---
 
-## Stage 2: Pure Financial Settlement Engine (`@trivio.ink/core`)
+## Stage 2A: Dynamic Merchant Fee Calculation Engine (Completed)
 
-**Goal:** Implement full-scale deterministic payment settlement calculation capabilities.
+**Goal:** Implement production-oriented dynamic merchant processing fee calculation engine in `@trivio.ink/core`.
 
-- [ ] Multi-tiered Merchant Discount Rate (MDR) calculation engine
-- [ ] Card scheme fee models (Interchange ++ and blended pricing structures)
-- [ ] Regional tax and withholding levies (e.g., VAT, NBT, WHT)
+- [x] Structured transaction input schema (grossMinor, currency, acquirerId, terminalId, cardScheme, etc.)
+- [x] Declarative merchant fee rule configuration (`MerchantFeeRule`, `FeeStructure`)
+- [x] Multi-mode fee structures: percentage MDR, fixed fee, blended rates, min fee floor, max fee ceiling
+- [x] Caller-configurable statutory levies and tax adjustments (`taxAdjustment`)
+- [x] Deterministic rule matching engine with criteria specificity scoring and priority ranking
+- [x] Ambiguity conflict rejection (`RuleConflictError`) and unmatched handling (`RuleNotFoundError`)
+- [x] Zero-float integer minor unit arithmetic with BigInt intermediate precision and Round-Half-Up policy
+- [x] Negative net settlement protection (`NegativeNetSettlementError`) with permissive override option
+- [x] Full backward compatibility with Stage 1 primitive (`estimatePercentageFee`)
+- [x] Official brand assets integration (`assets/brand/trivio.ink.png`, approved color palette)
+- [x] 71 automated unit tests across 5 test suites (100% passing)
+
+---
+
+## Stage 2B: Dynamic Settlement Calendar Engine (Next)
+
+**Goal:** Build deterministic settlement cycle and bank holiday calendar intelligence.
+
+- [ ] Acquirer settlement cycle modeling (T+0, T+1, T+2, T+3, weekly, monthly batches)
+- [ ] Bank cutoff windows and weekend rollover logic
+- [ ] Configurable bank holiday calendar datasets
+- [ ] Net credit settlement deposit date projections
 - [ ] Multi-currency minor-unit conversion helpers with zero float drift
 - [ ] Settlement calendar adjustments (bank holidays, weekend shifts, T+1/T+2/T+3 cycle projections)
 - [ ] Comprehensive scenario test suites with bank reconciliation edge cases
