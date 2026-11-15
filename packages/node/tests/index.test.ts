@@ -5,6 +5,9 @@ import {
   DEFAULT_TIMEOUT_MS,
   TrivioValidationError,
   estimatePercentageFee,
+  calculateFeeEstimate,
+  type TransactionInput,
+  type MerchantFeeRule,
 } from '../src/index.js';
 
 describe('TrivioClient (@trivio.ink/node foundation)', () => {
@@ -15,7 +18,7 @@ describe('TrivioClient (@trivio.ink/node foundation)', () => {
     expect(client.baseUrl).toBe(DEFAULT_BASE_URL);
     expect(client.timeoutMs).toBe(DEFAULT_TIMEOUT_MS);
     expect(client.isCloudConfigured).toBe(false);
-    expect(client.version).toBe('0.1.0');
+    expect(client.version).toBe('0.2.0');
   });
 
   it('initializes with custom options', () => {
@@ -61,8 +64,34 @@ describe('TrivioClient (@trivio.ink/node foundation)', () => {
     });
   });
 
-  it('re-exports core estimation function directly', () => {
+  it('performs dynamic fee estimation using client.calculateDynamicFee', () => {
+    const client = new TrivioClient();
+    const tx: TransactionInput = {
+      grossMinor: 1_000_000,
+      currency: 'LKR',
+      transactionDate: '2026-06-01T00:00:00Z',
+      acquirerId: 'acq_boc',
+    };
+    const rules: MerchantFeeRule[] = [
+      {
+        id: 'rule_boc_standard',
+        version: 1,
+        acquirerId: 'acq_boc',
+        effectiveFrom: '2026-01-01T00:00:00Z',
+        feeStructure: { rateBasisPoints: 250 },
+      },
+    ];
+
+    const result = client.calculateDynamicFee(tx, rules);
+    expect(result.grossMinor).toBe(1_000_000);
+    expect(result.totalFeeMinor).toBe(25_000);
+    expect(result.netMinor).toBe(975_000);
+    expect(result.appliedRule.id).toBe('rule_boc_standard');
+  });
+
+  it('re-exports core estimation functions directly', () => {
     expect(typeof estimatePercentageFee).toBe('function');
+    expect(typeof calculateFeeEstimate).toBe('function');
     const result = estimatePercentageFee(500_000, 200);
     expect(result.feeMinor).toBe(10_000);
   });
