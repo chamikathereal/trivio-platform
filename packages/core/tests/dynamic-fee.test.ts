@@ -644,45 +644,125 @@ describe('Dynamic Fee Calculation Engine (@trivio.ink/core)', () => {
       expect(result.appliedRateBasisPoints).toBe(190);
     });
 
-    it('strictly rejects distinct agreements with identical priority and specificity to prevent misleading attribution', () => {
-      const agreementA: MerchantFeeRule = {
-        id: 'agreement_retail_tier_2026',
-        version: 1,
-        acquirerId: 'acq_boc',
-        cardScheme: 'visa',
-        effectiveFrom: '2026-01-01T00:00:00Z',
-        feeStructure: { rateBasisPoints: 200 },
-      };
+    describe('Rule Conflict & Deduplication Matrix (Cases A - E)', () => {
+      // Case A: Same ID, same version, identical conditions and identical fee terms
+      it('Case A: safely and deterministically deduplicates identical rule definitions', () => {
+        const dup1: MerchantFeeRule = { ...BASE_RULE };
+        const dup2: MerchantFeeRule = { ...BASE_RULE };
 
-      const agreementB: MerchantFeeRule = {
-        id: 'agreement_promotional_special',
-        version: 1,
-        acquirerId: 'acq_boc',
-        cardScheme: 'visa',
-        effectiveFrom: '2026-01-01T00:00:00Z',
-        feeStructure: { rateBasisPoints: 200 }, // Same rate, but different contractual agreements
-      };
+        const resForward = calculateFeeEstimate(BASE_TRANSACTION, [dup1, dup2]);
+        const resReverse = calculateFeeEstimate(BASE_TRANSACTION, [dup2, dup1]);
 
-      // In financial calculation engines, choosing arbitrarily by alphabet produces misleading attribution.
-      // Must throw RuleConflictError to require explicit developer priority or distinct date windows.
-      expect(() => calculateFeeEstimate(BASE_TRANSACTION, [agreementA, agreementB])).toThrow(
-        RuleConflictError
-      );
-      expect(() => calculateFeeEstimate(BASE_TRANSACTION, [agreementB, agreementA])).toThrow(
-        RuleConflictError
-      );
-    });
+        expect(resForward.appliedRule.id).toBe(BASE_RULE.id);
+        expect(resReverse.appliedRule.id).toBe(BASE_RULE.id);
+        expect(resForward.totalFeeMinor).toBe(25_000);
+        expect(resReverse.totalFeeMinor).toBe(25_000);
+      });
 
-    it('evaluates duplicate rule entries with identical rule IDs deterministically without conflict', () => {
-      const duplicateA1 = { ...BASE_RULE };
-      const duplicateA2 = { ...BASE_RULE };
+      // Case B: Same ID, same version, different fee terms
+      it('Case B: rejects rules with identical ID and version but conflicting fee terms', () => {
+        const rule1: MerchantFeeRule = {
+          ...BASE_RULE,
+          id: 'rule_same_id',
+          version: '1.0.0',
+          feeStructure: { rateBasisPoints: 200 },
+        };
+        const rule2: MerchantFeeRule = {
+          ...BASE_RULE,
+          id: 'rule_same_id',
+          version: '1.0.0',
+          feeStructure: { rateBasisPoints: 300 }, // Conflicting rate on same ID!
+        };
 
-      const resForward = calculateFeeEstimate(BASE_TRANSACTION, [duplicateA1, duplicateA2]);
-      const resReverse = calculateFeeEstimate(BASE_TRANSACTION, [duplicateA2, duplicateA1]);
+        expect(() => calculateFeeEstimate(BASE_TRANSACTION, [rule1, rule2])).toThrow(
+          RuleConflictError
+        );
+        expect(() => calculateFeeEstimate(BASE_TRANSACTION, [rule2, rule1])).toThrow(
+          RuleConflictError
+        );
+      });
 
-      expect(resForward.appliedRule.id).toBe(BASE_RULE.id);
-      expect(resReverse.appliedRule.id).toBe(BASE_RULE.id);
-      expect(resForward.totalFeeMinor).toBe(resReverse.totalFeeMinor);
+      // Case C: Same ID, different versions, overlapping effective dates with equal priority
+      it('Case C: rejects same ID with multiple active versions at identical priority', () => {
+        const v1Rule: MerchantFeeRule = {
+          ...BASE_RULE,
+          id: 'rule_versioned_agreement',
+          version: '1.0.0',
+          effectiveFrom: '2026-01-01T00:00:00Z',
+          effectiveTo: '2026-12-31T23:59:59Z',
+          feeStructure: { rateBasisPoints: 200 },
+        };
+        const v2Rule: MerchantFeeRule = {
+          ...BASE_RULE,
+          id: 'rule_versioned_agreement',
+          version: '2.0.0',
+          effectiveFrom: '2026-06-01T00:00:00Z', // Overlaps with v1 on transaction date 2026-06-15!
+          effectiveTo: '2026-12-31T23:59:59Z',
+          feeStructure: { rateBasisPoints: 225 },
+        };
+
+        // Without an explicit priority override, overlapping versions throw conflict
+        expect(() => calculateFeeEstimate(BASE_TRANSACTION, [v1Rule, v2Rule])).toThrow(
+          RuleConflictError
+        );
+
+        // With explicit priority, the higher-priority version resolves unambiguously
+        const v2WithPriority: MerchantFeeRule = { ...v2Rule, priority: 10 };
+        const resolved = calculateFeeEstimate(BASE_TRANSACTION, [v1Rule, v2WithPriority]);
+        expect(resolved.appliedRule.version).toBe('2.0.0');
+        expect(resolved.appliedRateBasisPoints).toBe(225);
+      });
+
+      // Case D: Different IDs, identical priority and specificity, both matching
+      it('Case D: rejects distinct agreements tying in priority and specificity to prevent misleading attribution', () => {
+        const agreementA: MerchantFeeRule = {
+          id: 'agreement_retail_tier_2026',
+          version: 1,
+          acquirerId: 'acq_boc',
+          cardScheme: 'visa',
+          effectiveFrom: '2026-01-01T00:00:00Z',
+          feeStructure: { rateBasisPoints: 200 },
+        };
+        const agreementB: MerchantFeeRule = {
+          id: 'agreement_promotional_special',
+          version: 1,
+          acquirerId: 'acq_boc',
+          cardScheme: 'visa',
+          effectiveFrom: '2026-01-01T00:00:00Z',
+          feeStructure: { rateBasisPoints: 200 },
+        };
+
+        expect(() => calculateFeeEstimate(BASE_TRANSACTION, [agreementA, agreementB])).toThrow(
+          RuleConflictError
+        );
+      });
+
+      // Case E: Reversing the order of input rules
+      it('Case E: guarantees identical unambiguous result regardless of input array ordering', () => {
+        const standardRule: MerchantFeeRule = {
+          id: 'rule_standard',
+          version: 1,
+          acquirerId: 'acq_boc',
+          priority: 0,
+          effectiveFrom: '2026-01-01T00:00:00Z',
+          feeStructure: { rateBasisPoints: 250 },
+        };
+        const preferredRule: MerchantFeeRule = {
+          id: 'rule_preferred',
+          version: 1,
+          acquirerId: 'acq_boc',
+          priority: 5, // Explicit higher priority
+          effectiveFrom: '2026-01-01T00:00:00Z',
+          feeStructure: { rateBasisPoints: 210 },
+        };
+
+        const res1 = calculateFeeEstimate(BASE_TRANSACTION, [standardRule, preferredRule]);
+        const res2 = calculateFeeEstimate(BASE_TRANSACTION, [preferredRule, standardRule]);
+
+        expect(res1.appliedRule.id).toBe('rule_preferred');
+        expect(res2.appliedRule.id).toBe('rule_preferred');
+        expect(res1.totalFeeMinor).toBe(res2.totalFeeMinor);
+      });
     });
 
     it('exposes an immutable snapshot of applied agreement for historical audit trails', () => {

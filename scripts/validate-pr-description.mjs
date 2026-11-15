@@ -237,19 +237,12 @@ export function run() {
   const result = validatePrDescription(prBody);
 
   if (!result.valid) {
-    console.warn('\n⚠️ Pull request description governance advisory:\n');
+    console.error('\n❌ Pull request description validation FAILED with the following errors:\n');
     for (const err of result.errors) {
-      console.warn(`  - ${err}`);
+      console.error(`  - ${err}`);
     }
-    console.warn('\nConsider updating the pull request description to adhere to .github/pull_request_template.md');
-
-    // Strict enforcement is opt-in via STRICT_PR_VALIDATION=true to avoid blocking regular developer velocity
-    if (process.env.STRICT_PR_VALIDATION === 'true') {
-      process.exit(1);
-    }
-
-    console.log('\nℹ️ Running in non-blocking advisory mode. Governance check passed.');
-    process.exit(0);
+    console.error('\nPlease update the pull request description to adhere to .github/pull_request_template.md');
+    process.exit(1);
   }
 
   console.log('\n✅ Pull request description satisfies all 13 governance sections.');
