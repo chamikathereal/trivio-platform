@@ -134,7 +134,7 @@ export function validatePrDescription(body) {
   const lines = body.split('\n');
   const headings = lines
     .map((line, lineIndex) => {
-      const headerMatch = line.match(/^(#{2,6})\s+(.*)$/);
+      const headerMatch = line.match(/^\s{0,3}(#{1,6})\s+(.*)$/);
       if (!headerMatch) {
         return null;
       }
@@ -142,14 +142,14 @@ export function validatePrDescription(body) {
       return {
         lineIndex,
         level: headerMatch[1].length,
-        title: headerMatch[2].trim(),
+        title: headerMatch[2].replace(/\s+#+\s*$/, '').trim(),
       };
     })
     .filter(Boolean);
 
   // Verify each required section
   for (const req of REQUIRED_SECTIONS) {
-    const matchedSection = headings.find((h) => req.pattern.test(`${'#'.repeat(h.level)} ${h.title}`));
+    const matchedSection = headings.find((h) => req.pattern.test(`## ${h.title}`));
 
     if (!matchedSection) {
       errors.push(`Missing required section: "${req.title}" (Section ${req.id})`);

@@ -104,6 +104,22 @@ describe('PR Description Validator (Stage 1.1)', () => {
     expect(result.errors).toHaveLength(0);
   });
 
+  it('accepts required sections when top-level headings use level-1 markdown', () => {
+    const level1SectionHeadingsPR = VALID_SAMPLE_PR.replace(/^## (\d+\.\s)/gm, '# $1');
+
+    const result = validatePrDescription(level1SectionHeadingsPR);
+    expect(result.valid).toBe(true);
+    expect(result.errors).toHaveLength(0);
+  });
+
+  it('accepts required sections with leading heading indentation', () => {
+    const indentedHeadingPR = VALID_SAMPLE_PR.replace(/^## /gm, '  ## ');
+
+    const result = validatePrDescription(indentedHeadingPR);
+    expect(result.valid).toBe(true);
+    expect(result.errors).toHaveLength(0);
+  });
+
   it('rejects an empty PR body', () => {
     const result = validatePrDescription('');
     expect(result.valid).toBe(false);
