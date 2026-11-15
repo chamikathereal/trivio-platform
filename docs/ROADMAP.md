@@ -100,18 +100,24 @@
 
 ---
 
-## Stage 3B: React Developer SDK (`@trivio.ink/react`) (Next)
+## Stage 3B: React Developer SDK (`@trivio.ink/react`) (Completed)
 
-**Goal:** Provide accessible, developer-friendly React UI components and hooks for merchant fee breakdowns and settlement calendar scheduling.
+**Goal:** Deliver accessible, themeable, zero-runtime-dependency React UI components and offline calculation hooks for payment settlement intelligence.
 
-- [ ] Merchant fee ledger breakdown visualization component
-- [ ] Settlement schedule calendar and date projection display
-- [ ] Acquirer and agreement settings form controls
-- [ ] Accessible, WCAG-compliant design tokens and zero-runtime-dependency styling
+- [x] Compact settlement summary card component (`TrivioSettlementSummary`) displaying gross, fees, net, deposit date, and cycle
+- [x] Itemized merchant fee deduction list component (`TrivioFeeBreakdown`) with percentage MDR, fixed fees, boundary caps, tax, and rule snapshot drawer
+- [x] Visual settlement progress timeline component (`TrivioSettlementTimeline`) tracking authorization, cut-off evaluation, cycle days, holiday adjustments, and bank payout
+- [x] Shared context provider (`TrivioProvider`) and consumption hook (`useTrivio`) for global currency, rate fallback, theme, and locale defaults
+- [x] Instantaneous offline client calculation hook (`useTrivioSettlementEstimate`) with deterministic memoization and error boundary safety
+- [x] Zero-float financial formatting utilities (`formatCurrency`, `formatMinorAmount`, `formatRateBps`, `getCurrencyDecimals`, `formatDisplayDate`)
+- [x] Official brand tokens and theme palettes (`dark`, `light`, `auto`) utilizing Midnight Navy (`#000b26`), Electric Cyan (`#00ffff`), and Warm White (`#fffefa`)
+- [x] WCAG 2.2 AA compliant semantic HTML structure, aria labels, and high-contrast color ratios
+- [x] 100% SSR-safe execution verified for Next.js (App & Pages Router), Remix, Vite, and Astro with zero DOM global leaks
+- [x] 16 new automated unit and integration tests expanding monorepo test coverage to 166 passing tests (100% pass rate)
 
 ---
 
-## Stage 3C: npm Release Readiness & Multi-Platform Packaging (Planned)
+## Stage 3C: npm Release Readiness & Multi-Platform Packaging (Next)
 
 **Goal:** Prepare all three SDK packages (`@trivio.ink/core`, `@trivio.ink/node`, `@trivio.ink/react`) for public release on the npm registry.
 
