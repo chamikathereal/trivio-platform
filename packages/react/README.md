@@ -198,6 +198,12 @@ formatDisplayDate('2026-11-18');        // "Wed, Nov 18, 2026"
 
 ---
 
-## 7. License
+## 7. License & Legal
 
-Proprietary / Apache-2.0 — Trivio Platform (`trivio.ink`).
+- **License:** Licensed under the **Apache License, Version 2.0** (`Apache-2.0`).
+- **Copyright:** `Copyright 2026 trivio.ink`.
+- **Commercial Use:** Permitted in commercial frontend applications, POS terminals, and portals without licensing fees.
+- **Offline & Theme Freedom:** Components render entirely on the client or SSR with zero cloud telemetry. Theme tokens (`Midnight Navy`, `Electric Cyan`, `Warm White`) provide out-of-the-box styling.
+- **Trademarks:** Trivio brand marks are proprietary and not granted under Apache-2.0.
+- **Status:** Not yet published to public npm registry (`"private": true`).
+- See [LICENSE](./LICENSE) and [NOTICE](./NOTICE) for full terms, and consult [docs/LICENSING.md](../../docs/LICENSING.md).

@@ -1,3 +1,6 @@
+// Copyright 2026 trivio.ink
+// SPDX-License-Identifier: Apache-2.0
+
 /**
  * @file packages/core/src/types/errors.ts
  * @description Typed error hierarchy for Trivio payment settlement calculation primitives.

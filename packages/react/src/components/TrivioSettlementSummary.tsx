@@ -1,3 +1,6 @@
+// Copyright 2026 trivio.ink
+// SPDX-License-Identifier: Apache-2.0
+
 /**
  * @file packages/react/src/components/TrivioSettlementSummary.tsx
  * @description Compact, accessible financial settlement forecast summary card.

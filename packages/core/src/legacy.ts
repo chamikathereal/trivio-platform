@@ -1,3 +1,6 @@
+// Copyright 2026 trivio.ink
+// SPDX-License-Identifier: Apache-2.0
+
 /**
  * @file packages/core/src/legacy.ts
  * @description Backward-compatible Stage 1 percentage fee calculation primitive.

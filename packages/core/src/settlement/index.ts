@@ -1,3 +1,6 @@
+// Copyright 2026 trivio.ink
+// SPDX-License-Identifier: Apache-2.0
+
 /**
  * @file packages/core/src/settlement/index.ts
  * @description Public exports for Trivio settlement calendar and date forecasting engine.

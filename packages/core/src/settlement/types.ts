@@ -1,3 +1,6 @@
+// Copyright 2026 trivio.ink
+// SPDX-License-Identifier: Apache-2.0
+
 /**
  * @file packages/core/src/settlement/types.ts
  * @description Type definitions for Trivio dynamic settlement calendar and forecasting engine.

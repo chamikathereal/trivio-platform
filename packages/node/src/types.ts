@@ -1,3 +1,6 @@
+// Copyright 2026 trivio.ink
+// SPDX-License-Identifier: Apache-2.0
+
 /**
  * @file packages/node/src/types.ts
  * @description Type definitions for the Trivio Node.js SDK client.

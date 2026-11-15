@@ -1,3 +1,6 @@
+// Copyright 2026 trivio.ink
+// SPDX-License-Identifier: Apache-2.0
+
 /**
  * @file packages/react/src/formatters.ts
  * @description Zero-float currency, rate, and calendar date formatting utilities.

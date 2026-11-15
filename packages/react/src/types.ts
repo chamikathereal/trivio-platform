@@ -1,3 +1,6 @@
+// Copyright 2026 trivio.ink
+// SPDX-License-Identifier: Apache-2.0
+
 /**
  * @file packages/react/src/types.ts
  * @description Type definitions for Trivio React settlement UI components and hooks.

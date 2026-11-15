@@ -204,3 +204,15 @@ console.log(client.formatLedgerSummary(estimate));
 | `SettlementPolicyNotFoundError` | `TrivioError` | No settlement policy matches acquirer or currency |
 | `SettlementPolicyConflictError` | `TrivioError` | Distinct settlement policies tie at identical priority |
 | `SettlementCalendarNotFoundError` | `TrivioError` | Matched policy references an unknown calendar ID |
+
+---
+
+## 7. Licensing & Legal
+
+- **License:** Licensed under the **Apache License, Version 2.0** (`Apache-2.0`).
+- **Copyright:** `Copyright 2026 trivio.ink`.
+- **Commercial Use:** Permitted in commercial applications, backends, and microservices without licensing fees or mandatory cloud connectivity.
+- **Offline & Ledger Independence:** Runs locally inside your Node.js processes. Transaction persistence is completely developer-owned.
+- **Trademarks:** Trivio brand assets and names are reserved and not granted under Apache-2.0.
+- **Status:** Not yet published to public npm registry (`"private": true`).
+- See [LICENSE](./LICENSE) and [NOTICE](./NOTICE) for full terms, and consult [docs/LICENSING.md](../../docs/LICENSING.md).

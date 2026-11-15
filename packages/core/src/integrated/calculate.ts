@@ -1,3 +1,6 @@
+// Copyright 2026 trivio.ink
+// SPDX-License-Identifier: Apache-2.0
+
 /**
  * @file packages/core/src/integrated/calculate.ts
  * @description Master integrated calculation engine combining dynamic MDR fees and settlement calendar projections.

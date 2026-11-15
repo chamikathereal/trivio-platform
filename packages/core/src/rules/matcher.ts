@@ -1,3 +1,6 @@
+// Copyright 2026 trivio.ink
+// SPDX-License-Identifier: Apache-2.0
+
 /**
  * @file packages/core/src/rules/matcher.ts
  * @description Deterministic rule selection and specificity matching engine.

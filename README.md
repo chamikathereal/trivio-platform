@@ -129,20 +129,29 @@ console.log(result);
 
 | Milestone | Status | Description |
 | :--- | :---: | :--- |
-| **Stage 1** | **Completed** | Monorepo foundation, npm Workspaces, CI, SDK packages, and documentation (Merged via PR #1) |
-| **Stage 1.1** | **Completed** | Development governance, AGENTS.md, PR quality gate, repository hardening (Merged via PR #2) |
-| **Stage 2A** | **Completed** | Dynamic merchant fee calculation engine in `@trivio.ink/core`, official brand integration |
-| **Stage 2B** | *Planned* | Dynamic settlement calendar engine, bank holidays, and cut-off rollover projections |
-| **Stage 3** | *Planned* | Multi-platform developer SDKs and middleware |
+| **Stage 1** | **Completed** | Monorepo foundation, npm Workspaces, CI, SDK packages, and documentation (PR #1) |
+| **Stage 1.1** | **Completed** | Development governance, AGENTS.md, PR quality gate, repository hardening (PR #2) |
+| **Stage 2A** | **Completed** | Dynamic merchant fee calculation engine in `@trivio.ink/core` (PR #8) |
+| **Stage 2B** | **Completed** | Dynamic settlement calendar engine, holidays, and cut-off projections (PR #9) |
+| **Stage 2C** | **Completed** | Unified fee & settlement intelligence calculation engine (PR #10) |
+| **Stage 3A** | **Completed** | Server-side Node.js developer SDK foundation in `@trivio.ink/node` (PR #11) |
+| **Stage 3B** | **Completed** | Reusable React hooks & settlement UI components in `@trivio.ink/react` (PR #12, PR #13) |
+| **Stage 3C-A** | **Completed** | Independent package packaging acceptance, whitelists, and versioning standards (PR #14) |
+| **Stage 3C-B1** | **In Progress** | Formal corporate Apache-2.0 licensing under `trivio.ink` and distribution governance |
+| **Stage 3C-B2** | *Planned* | npm registry organization verification and controlled public publication |
 | **Stage 4** | *Planned* | Next.js merchant console, documentation portal, and marketing site |
-| **Stage 5** | *Planned* | NestJS hosted cloud API with PostgreSQL/Prisma persistence |
+| **Stage 5** | *Planned* | NestJS hosted cloud API with PostgreSQL/Prisma persistence & automated reconciliation |
 
 For details, refer to [ROADMAP.md](./docs/ROADMAP.md).
 
 ---
 
-## 7. Security & License
+## 7. Security & Licensing
 
-- **Security:** Review our [Security Policy](./SECURITY.md). Never process raw PAN, CVV, or authentication PINs in Trivio generic libraries.
+- **Security Policy:** Review our [Security Policy](./SECURITY.md). Never process raw PAN, CVV, or authentication PINs in Trivio generic libraries.
 - **Contributing:** Review our [Contribution Guidelines](./CONTRIBUTING.md).
-- **License:** Proprietary internal development — All rights reserved (trivio.ink).
+- **Client Developer SDKs Licensing (`packages/*`):** The three SDK packages ([`@trivio.ink/core`](./packages/core), [`@trivio.ink/node`](./packages/node), [`@trivio.ink/react`](./packages/react)) are licensed under the **Apache License, Version 2.0** (`Apache-2.0`), Copyright 2026 `trivio.ink`. Commercial ERP, POS, and accounting integration is permitted without fee or mandatory cloud connectivity.
+- **Proprietary Cloud Platform (`apps/*`):** Future hosted cloud applications, reconciliation engines, and multi-tenant services are commercial and subject to separate proprietary terms.
+- **Trademarks & Brand Identity:** The name `trivio.ink`, logos, and color tokens are independently protected trademarks and are not granted under the SDK license.
+- **Publication Status:** All packages remain private (`"private": true`) pending Stage 3C-B2 release authorization.
+- **Policy Reference:** For complete legal terms and boundaries, consult [docs/LICENSING.md](./docs/LICENSING.md).

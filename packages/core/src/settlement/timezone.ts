@@ -1,3 +1,6 @@
+// Copyright 2026 trivio.ink
+// SPDX-License-Identifier: Apache-2.0
+
 /**
  * @file packages/core/src/settlement/timezone.ts
  * @description Timezone-aware date and time parsing primitives using ECMAScript Intl.

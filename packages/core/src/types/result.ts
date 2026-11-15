@@ -1,3 +1,6 @@
+// Copyright 2026 trivio.ink
+// SPDX-License-Identifier: Apache-2.0
+
 /**
  * @file packages/core/src/types/result.ts
  * @description Result structures and breakdown models for dynamic fee estimation.

@@ -1,3 +1,6 @@
+// Copyright 2026 trivio.ink
+// SPDX-License-Identifier: Apache-2.0
+
 /**
  * @file packages/react/src/components/TrivioFeeBreakdown.tsx
  * @description Accessible itemized fee breakdown displaying percentage MDR, fixed fee,
