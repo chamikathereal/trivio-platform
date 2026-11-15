@@ -1,0 +1,22 @@
+{
+  "name": "@trivio.ink/core",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Deterministic, zero-dependency payment settlement calculation engine for Trivio",
+  "homepage": "https://trivio.ink",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  }
+}

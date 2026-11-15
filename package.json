@@ -1,0 +1,33 @@
+{
+  "name": "trivio-platform",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Payment Settlement Intelligence Platform",
+  "homepage": "https://trivio.ink",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/trivio-ink/trivio-platform.git"
+  },
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  },
+  "scripts": {
+    "build": "npm run --workspaces --if-present build",
+    "typecheck": "npm run --workspaces --if-present typecheck",
+    "test": "vitest run",
+    "check": "npm run build && npm run typecheck && npm test"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.0",
+    "@types/react": "^19.0.0",
+    "react": "^19.0.0",
+    "typescript": "^5.7.3",
+    "vitest": "^5.1.0"
+  }
+}
