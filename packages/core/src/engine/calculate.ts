@@ -8,8 +8,13 @@ import {
   DEFAULT_CALCULATION_POLICY,
 } from '../arithmetic/monetary.js';
 import { findMatchingRule } from '../rules/matcher.js';
-import { NegativeNetSettlementError, TrivioValidationError } from '../types/errors.js';
+import {
+  NegativeNetSettlementError,
+  TrivioRangeError,
+  TrivioValidationError,
+} from '../types/errors.js';
 import type {
+  AppliedRuleSnapshot,
   DynamicFeeEstimateResult,
   FeeBreakdownDetails,
   FeeCalculationOptions,
@@ -111,6 +116,17 @@ export function calculateFeeEstimate(
   const totalFeeMinor = adjustedBaseFeeMinor + taxMinor;
   const netMinor = normalizedTx.grossMinor - totalFeeMinor;
 
+  // Safe integer bounds validation on output financial values
+  if (!Number.isSafeInteger(baseFeeMinor) || baseFeeMinor > Number.MAX_SAFE_INTEGER) {
+    throw new TrivioRangeError(`Base fee calculation exceeds Number.MAX_SAFE_INTEGER: ${baseFeeMinor}`);
+  }
+  if (!Number.isSafeInteger(totalFeeMinor) || totalFeeMinor > Number.MAX_SAFE_INTEGER) {
+    throw new TrivioRangeError(`Total fee calculation exceeds Number.MAX_SAFE_INTEGER: ${totalFeeMinor}`);
+  }
+  if (!Number.isSafeInteger(netMinor)) {
+    throw new TrivioRangeError(`Net settlement calculation exceeds safe integer bounds: ${netMinor}`);
+  }
+
   // 9. Negative Net Check
   if (netMinor < 0 && !options.allowNegativeNetSettlement) {
     throw new NegativeNetSettlementError(
@@ -140,6 +156,26 @@ export function calculateFeeEstimate(
 
   const calculationPolicy = options.calculationPolicy ?? DEFAULT_CALCULATION_POLICY;
 
+  const ruleSnapshot: AppliedRuleSnapshot = {
+    id: matchedRule.id,
+    version: matchedRule.version,
+    priority: matchedRule.priority,
+    acquirerId: matchedRule.acquirerId,
+    currency: matchedRule.currency,
+    merchantId: matchedRule.merchantId,
+    terminalId: matchedRule.terminalId,
+    cardScheme: matchedRule.cardScheme,
+    cardFundingType: matchedRule.cardFundingType,
+    cardRegion: matchedRule.cardRegion,
+    effectiveFrom: matchedRule.effectiveFrom.toISOString(),
+    effectiveTo: matchedRule.effectiveTo ? matchedRule.effectiveTo.toISOString() : undefined,
+    rateBasisPoints: fs.rateBasisPoints,
+    fixedFeeMinor: fs.fixedFeeMinor ?? 0,
+    minFeeMinor: fs.minFeeMinor,
+    maxFeeMinor: fs.maxFeeMinor,
+    taxAdjustment: fs.taxAdjustment ? { ...fs.taxAdjustment } : undefined,
+  };
+
   return {
     grossMinor: normalizedTx.grossMinor,
     currency: normalizedTx.currency,
@@ -156,6 +192,7 @@ export function calculateFeeEstimate(
       version: matchedRule.version,
       priority: matchedRule.priority,
       description: matchedRule.description,
+      snapshot: ruleSnapshot,
     },
     breakdown,
     isEstimate: true,

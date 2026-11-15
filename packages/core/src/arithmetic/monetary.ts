@@ -81,5 +81,8 @@ export function calculatePercentageFee(
   const numerator = grossBig * rateBig;
 
   const feeBig = roundHalfUpDiv(numerator, BASIS_POINTS_DIVISOR);
+  if (feeBig > BigInt(Number.MAX_SAFE_INTEGER)) {
+    throw new TrivioRangeError(`Calculated percentage fee exceeds Number.MAX_SAFE_INTEGER: ${feeBig}`);
+  }
   return Number(feeBig);
 }

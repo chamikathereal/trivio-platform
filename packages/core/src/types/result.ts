@@ -58,6 +58,35 @@ export interface FeeBreakdownDetails {
 }
 
 /**
+ * Self-contained immutable snapshot of the matched rule parameters at evaluation time.
+ * Enables developers to persist and verify historical calculation fidelity in their own
+ * database ledgers even if fee rules are modified, replaced, or deleted in the future.
+ */
+export interface AppliedRuleSnapshot {
+  id: string;
+  version: string | number;
+  priority: number;
+  acquirerId: string;
+  currency?: string;
+  merchantId?: string;
+  terminalId?: string;
+  cardScheme?: string;
+  cardFundingType?: string;
+  cardRegion?: string;
+  effectiveFrom: string;
+  effectiveTo?: string;
+  rateBasisPoints: number;
+  fixedFeeMinor: number;
+  minFeeMinor?: number;
+  maxFeeMinor?: number;
+  taxAdjustment?: {
+    rateBasisPoints?: number;
+    fixedMinor?: number;
+    name?: string;
+  };
+}
+
+/**
  * Complete result output for a dynamic fee calculation evaluation.
  */
 export interface DynamicFeeEstimateResult {
@@ -91,12 +120,13 @@ export interface DynamicFeeEstimateResult {
   /** Total tax or levy added to merchant fee in minor units. */
   taxMinor: number;
 
-  /** Identification metadata for the matched agreement rule. */
+  /** Identification metadata and immutable snapshot of the matched agreement rule. */
   appliedRule: {
     id: string;
     version: string | number;
     priority: number;
     description?: string;
+    snapshot: AppliedRuleSnapshot;
   };
 
   /** Detailed arithmetic reconciliation breakdown. */
