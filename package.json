@@ -23,7 +23,8 @@
     "test": "vitest run",
     "check": "npm run build && npm run typecheck && npm test",
     "validate:pr": "node scripts/validate-pr-description.mjs",
-    "verify:release": "node scripts/verify-consumer-acceptance.mjs"
+    "verify:release": "node scripts/verify-consumer-acceptance.mjs",
+    "test:tarball": "node scripts/test-isolated-tarballs.mjs"
   },
   "devDependencies": {
     "@types/node": "^22.13.0",

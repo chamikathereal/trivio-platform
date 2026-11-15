@@ -1,3 +1,6 @@
+// Copyright 2026 trivio.ink
+// SPDX-License-Identifier: Apache-2.0
+
 /**
  * @file packages/node/src/index.ts
  * @description Server-side Node.js SDK for Trivio Payment Settlement Intelligence.

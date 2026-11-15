@@ -1,3 +1,6 @@
+// Copyright 2026 trivio.ink
+// SPDX-License-Identifier: Apache-2.0
+
 /**
  * @file packages/core/src/settlement/policy-matcher.ts
  * @description Deterministic settlement policy matching and conflict resolution engine.

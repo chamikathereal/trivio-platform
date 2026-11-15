@@ -1,3 +1,6 @@
+// Copyright 2026 trivio.ink
+// SPDX-License-Identifier: Apache-2.0
+
 /**
  * @file packages/react/src/hooks/useTrivioSettlementEstimate.ts
  * @description Client-side React hook for memoized, zero-network payment settlement calculations.

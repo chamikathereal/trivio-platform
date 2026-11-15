@@ -1,3 +1,6 @@
+// Copyright 2026 trivio.ink
+// SPDX-License-Identifier: Apache-2.0
+
 /**
  * @file packages/react/src/theme.ts
  * @description Trivio brand tokens, color constants, and CSS variable styling definitions.

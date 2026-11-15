@@ -1,3 +1,6 @@
+// Copyright 2026 trivio.ink
+// SPDX-License-Identifier: Apache-2.0
+
 /**
  * @file packages/node/src/client.ts
  * @description Main server-side TrivioClient for backend and ERP payment settlement integrations.

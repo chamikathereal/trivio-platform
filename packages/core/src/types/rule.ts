@@ -1,3 +1,6 @@
+// Copyright 2026 trivio.ink
+// SPDX-License-Identifier: Apache-2.0
+
 /**
  * @file packages/core/src/types/rule.ts
  * @description Types defining merchant fee agreements, rate structures, and rule models.

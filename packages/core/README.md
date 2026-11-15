@@ -401,4 +401,16 @@ console.log(estimate);
 
 - **Authorization Estimates vs. Settlements:** Outputs are offline mathematical estimates at authorization time. Realized bank credits remain subject to post-authorization batch reconciliation.
 - **Card Surcharges:** The core engine does not compute customer-facing checkout surcharges; it models merchant acquirer deductions and deposit schedules.
-- **Stage 3 SDKs:** Multi-platform developer SDKs (`@trivio.ink/node` and `@trivio.ink/react`) will provide server middlewares and React visualizers.
+- **Stage 3 SDKs:** Multi-platform developer SDKs (`@trivio.ink/node` and `@trivio.ink/react`) provide server clients and React visualizers.
+
+---
+
+## 13. Licensing & Legal
+
+- **License:** Licensed under the **Apache License, Version 2.0** (`Apache-2.0`).
+- **Copyright:** `Copyright 2026 trivio.ink`.
+- **Commercial Use:** Permitted in commercial ERP, POS, e-commerce, and accounting software without licensing fees or cloud dependencies.
+- **Offline Guarantee:** Calculations execute 100% locally on developer infrastructure with zero external telemetry or cloud connection required.
+- **Trademarks:** Trivio names and logos are reserved and not granted under Apache-2.0.
+- **Status:** Not yet published to public npm registry (`"private": true`).
+- See [LICENSE](./LICENSE) and [NOTICE](./NOTICE) for full terms, and consult [docs/LICENSING.md](../../docs/LICENSING.md).

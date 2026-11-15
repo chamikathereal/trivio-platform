@@ -1,3 +1,6 @@
+// Copyright 2026 trivio.ink
+// SPDX-License-Identifier: Apache-2.0
+
 /**
  * @file packages/core/src/validation/transaction.ts
  * @description Input validation and normalization for payment transactions.

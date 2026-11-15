@@ -1,3 +1,6 @@
+// Copyright 2026 trivio.ink
+// SPDX-License-Identifier: Apache-2.0
+
 /**
  * @file packages/core/src/engine/calculate.ts
  * @description Master calculation engine for dynamic merchant fee and net settlement estimation.

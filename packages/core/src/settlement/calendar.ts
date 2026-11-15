@@ -1,3 +1,6 @@
+// Copyright 2026 trivio.ink
+// SPDX-License-Identifier: Apache-2.0
+
 /**
  * @file packages/core/src/settlement/calendar.ts
  * @description Calendar calculation primitives for working days, holidays, and T+N advancement.

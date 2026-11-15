@@ -1,3 +1,6 @@
+// Copyright 2026 trivio.ink
+// SPDX-License-Identifier: Apache-2.0
+
 /**
  * @file packages/core/src/arithmetic/monetary.ts
  * @description Zero-float financial arithmetic primitives using integer minor units and BigInt.

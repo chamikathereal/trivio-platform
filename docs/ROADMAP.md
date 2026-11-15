@@ -134,12 +134,29 @@
 
 ---
 
-## Stage 3C-B: Controlled npm Publication (Next — Requires Explicit Owner Authorization)
+## Stage 3C-B1: Apache-2.0 Corporate Licensing Implementation (Completed)
 
-**Goal:** Authorize license agreement, configure npm organization scope permissions, and execute controlled initial publication (`v0.1.0`) to the public npm registry.
+**Goal:** Implement approved Apache-2.0 corporate licensing (`LIC-2026-001` Rev 2) across `@trivio.ink/core`, `@trivio.ink/node`, and `@trivio.ink/react` under corporate copyright holder `trivio.ink`, while preserving proprietary cloud application boundaries and brand protection.
 
-- [ ] Repository owner formal license decision and LICENSE file creation
-- [ ] npm organization scope (`@trivio.ink`) verification on npmjs.com
+- [x] Official unmodified Apache-2.0 `LICENSE` files placed in all three SDK packages
+- [x] Package-level `NOTICE` files establishing corporate copyright notice (`Copyright 2026 trivio.ink`)
+- [x] Corporate copyright headers added to all 34 SDK source files (`// Copyright 2026 trivio.ink`, `// SPDX-License-Identifier: Apache-2.0`)
+- [x] Package manifests updated with `"license": "Apache-2.0"` and files whitelist updated to include `LICENSE` and `NOTICE`
+- [x] Licensing policy and proprietary boundaries documented in `docs/LICENSING.md`
+- [x] Automated licensing verification test suite (`tests/licensing.test.ts`)
+- [x] Packaging and distribution verification updated in `scripts/verify-consumer-acceptance.mjs`
+- [x] All three SDKs preserved as private (`"private": true`) with zero unauthorized public registry actions
+- [x] Monorepo root unencumbered by blanket open-source license, preserving proprietary cloud boundaries
+
+---
+
+## Stage 3C-B2: npm Organization Scope Verification & Controlled Publication (Next)
+
+**Goal:** Verify `@trivio.ink` scope ownership on npmjs.com, configure 2FA and publishing permissions, and execute owner-authorized initial publication (`v0.1.0`).
+
+- [ ] Project owner verifies control of `@trivio.ink` scope on npmjs.com
+- [ ] Account security verification (2FA, organization publishing permissions)
+- [ ] Pre-release legal entity name verification against company registration
 - [ ] Removal of `"private": true` publication guard upon explicit authorization
 - [ ] Initial publication of `@trivio.ink/core@0.1.0`, `@trivio.ink/node@0.1.0`, `@trivio.ink/react@0.1.0`
 

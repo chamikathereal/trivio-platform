@@ -1,3 +1,6 @@
+// Copyright 2026 trivio.ink
+// SPDX-License-Identifier: Apache-2.0
+
 /**
  * @file packages/react/src/context.ts
  * @description React Context and Provider establishing shared defaults for Trivio settlement components.

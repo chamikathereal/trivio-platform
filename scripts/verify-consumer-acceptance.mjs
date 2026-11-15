@@ -46,9 +46,26 @@ async function run() {
     const pkgJson = JSON.parse(fs.readFileSync(pkgJsonPath, 'utf8'));
 
     assert(pkgJson.private === true, `@trivio.ink/${pkg} retains "private": true`);
+    assert(pkgJson.license === 'Apache-2.0', `@trivio.ink/${pkg} specifies "license": "Apache-2.0"`);
     assert(
       Array.isArray(pkgJson.files) && pkgJson.files.includes('dist'),
       `@trivio.ink/${pkg} explicitly whitelists "dist" in files array`
+    );
+    assert(
+      Array.isArray(pkgJson.files) && pkgJson.files.includes('LICENSE'),
+      `@trivio.ink/${pkg} explicitly whitelists "LICENSE" in files array`
+    );
+    assert(
+      Array.isArray(pkgJson.files) && pkgJson.files.includes('NOTICE'),
+      `@trivio.ink/${pkg} explicitly whitelists "NOTICE" in files array`
+    );
+    assert(
+      fs.existsSync(path.join(rootDir, 'packages', pkg, 'LICENSE')),
+      `@trivio.ink/${pkg} LICENSE exists on disk`
+    );
+    assert(
+      fs.existsSync(path.join(rootDir, 'packages', pkg, 'NOTICE')),
+      `@trivio.ink/${pkg} NOTICE exists on disk`
     );
     assert(
       fs.existsSync(path.join(rootDir, 'packages', pkg, 'dist', 'index.js')),
