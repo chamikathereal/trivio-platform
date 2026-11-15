@@ -54,10 +54,10 @@ const client = new TrivioClient({
 });
 
 // 2. Compute settlement for an incoming payment transaction
-const estimate = client.calculateSettlement({
+const estimate = client.calculatePaymentSettlementEstimate({
   grossMinor: 10000, // $100.00
   currency: "USD",
-  transactionTime: new Date().toISOString(),
+  transactionTime: "2026-11-16T12:00:00Z",
   acquirerId: "ACQ_STRIPE",
 });
 

@@ -331,7 +331,7 @@ export function SettlementCalculator() {
 
               {/* Code snippet trigger */}
               <div className="pt-2 text-[11px] text-gray-500 border-t border-trivio-border/60">
-                <span className="font-mono text-trivio-cyan">Trivio Financial Invariant:</span> Precision is preserved down to exact minor units using BigInt integer arithmetic with Banker&apos;s Rounding.
+                <span className="font-mono text-trivio-cyan">Trivio Financial Invariant:</span> Precision is preserved down to exact minor units using BigInt integer arithmetic with Round-Half-Up (<code className="font-mono text-trivio-cyan">roundHalfUpDiv</code>).
               </div>
             </CardContent>
           </Card>

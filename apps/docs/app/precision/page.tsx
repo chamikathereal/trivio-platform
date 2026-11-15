@@ -6,7 +6,7 @@ import { ArrowRight, ArrowLeft } from "lucide-react";
 
 export const metadata = {
   title: "Zero-Float Monetary Precision — Trivio Docs",
-  description: "Mandatory zero-float financial arithmetic, minor units, and banker's rounding.",
+  description: "Mandatory zero-float financial arithmetic, minor units, and deterministic round-half-up rounding.",
 };
 
 const precisionExample = `// ❌ Prohibited floating-point calculation:
@@ -15,7 +15,7 @@ const precisionExample = `// ❌ Prohibited floating-point calculation:
 // ✅ Trivio deterministic integer calculation:
 const grossMinor = 1000000n; // 10,000.00
 const rateBps = 290n;        // 2.90%
-const percentageFee = (grossMinor * rateBps + 5000n) / 10000n; // Exact banker's rounding`;
+const percentageFee = (grossMinor * rateBps + 5000n) / 10000n; // Exact Round-Half-Up division`;
 
 export default function PrecisionDocumentationPage() {
   return (
@@ -40,7 +40,7 @@ export default function PrecisionDocumentationPage() {
         <div>
           <h2 className="text-base font-bold text-trivio-warm mb-2">Rounding Policy</h2>
           <p className="text-xs text-gray-400">
-            Trivio implements <strong>Round-Half-Even (Banker&apos;s Rounding)</strong> as its default arithmetic rounding policy, preventing systematic upward or downward fee creep across merchant portfolios.
+            Trivio implements <strong>Round-Half-Up (<code className="font-mono text-trivio-cyan">roundHalfUpDiv</code>)</strong> as its core arithmetic rounding policy (<code className="font-mono text-trivio-cyan">trivio-mdr-v1-half-up</code>), adding half the divisor (<code className="font-mono text-trivio-cyan">5000n</code> for basis points divisor <code className="font-mono text-trivio-cyan">10000n</code>) before integer division to guarantee deterministic commercial banking behavior without floating-point error.
           </p>
         </div>
       </div>

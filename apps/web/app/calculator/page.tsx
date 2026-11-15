@@ -30,7 +30,7 @@ export default function CalculatorPage() {
             <strong>Minor Unit Conversion:</strong> Amounts are converted to integer minor units (e.g., $10,000.00 becomes 1,000,000 minor units).
           </li>
           <li>
-            <strong>Percentage Fee Calculation:</strong> Percentage rate is expressed in basis points (1 bps = 0.01%). The calculation performs <code className="font-mono text-trivio-cyan">(grossMinor * bps) / 10000n</code> with banker&apos;s rounding.
+            <strong>Percentage Fee Calculation:</strong> Percentage rate is expressed in basis points (1 bps = 0.01%). The calculation performs <code className="font-mono text-trivio-cyan">(grossMinor * bps + 5000n) / 10000n</code> with deterministic round-half-up division (<code className="font-mono text-trivio-cyan">roundHalfUpDiv</code>).
           </li>
           <li>
             <strong>Fixed Deductions:</strong> Flat acquirer levies or wire charges are added directly to the percentage deduction.
