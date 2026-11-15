@@ -4,9 +4,36 @@
   "private": true,
   "description": "Server-side Node.js SDK foundation for Trivio Payment Settlement Intelligence",
   "homepage": "https://trivio.ink",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/trivio-ink/trivio-platform.git",
+    "directory": "packages/node"
+  },
+  "bugs": {
+    "url": "https://github.com/trivio-ink/trivio-platform/issues"
+  },
+  "keywords": [
+    "payment",
+    "settlement",
+    "trivio",
+    "sdk",
+    "node",
+    "fintech",
+    "erp",
+    "pos",
+    "accounting",
+    "ledger"
+  ],
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -15,7 +42,7 @@
     }
   },
   "dependencies": {
-    "@trivio.ink/core": "*"
+    "@trivio.ink/core": "^0.1.0"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",

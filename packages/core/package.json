@@ -4,9 +4,35 @@
   "private": true,
   "description": "Deterministic, zero-dependency payment settlement calculation engine for Trivio",
   "homepage": "https://trivio.ink",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/trivio-ink/trivio-platform.git",
+    "directory": "packages/core"
+  },
+  "bugs": {
+    "url": "https://github.com/trivio-ink/trivio-platform/issues"
+  },
+  "keywords": [
+    "payment",
+    "settlement",
+    "mdr",
+    "merchant",
+    "fintech",
+    "zero-float",
+    "finance",
+    "calendar",
+    "acquirer"
+  ],
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",

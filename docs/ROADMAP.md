@@ -107,19 +107,41 @@
 - [x] Compact settlement summary card component (`TrivioSettlementSummary`) displaying gross, fees, net, deposit date, and cycle
 - [x] Itemized merchant fee deduction list component (`TrivioFeeBreakdown`) with percentage MDR, fixed fees, boundary caps, tax, and rule snapshot drawer
 - [x] Visual settlement progress timeline component (`TrivioSettlementTimeline`) tracking authorization, cut-off evaluation, cycle days, holiday adjustments, and bank payout
-- [x] Shared context provider (`TrivioProvider`) and consumption hook (`useTrivio`) for global currency, rate fallback, theme, and locale defaults
+- [x] Shared context provider (`TrivioProvider`) and consumption hook (`useTrivio`) for global display currency, theme, and locale defaults
 - [x] Instantaneous offline client calculation hook (`useTrivioSettlementEstimate`) with deterministic memoization and error boundary safety
 - [x] Zero-float financial formatting utilities (`formatCurrency`, `formatMinorAmount`, `formatRateBps`, `getCurrencyDecimals`, `formatDisplayDate`)
 - [x] Official brand tokens and theme palettes (`dark`, `light`, `auto`) utilizing Midnight Navy (`#000b26`), Electric Cyan (`#00ffff`), and Warm White (`#fffefa`)
-- [x] WCAG 2.2 AA compliant semantic HTML structure, aria labels, and high-contrast color ratios
-- [x] 100% SSR-safe execution verified for Next.js (App & Pages Router), Remix, Vite, and Astro with zero DOM global leaks
-- [x] 16 new automated unit and integration tests expanding monorepo test coverage to 166 passing tests (100% pass rate)
+- [x] Strict financial safety invariant: Complete removal of automatic rate fallbacks; unconfigured fee agreements fail explicitly with `TrivioValidationError`
+- [x] Accessibility-first semantic HTML5 markup and verified SSR-safe pure ESM execution
+- [x] 27 automated unit and integration tests covering the React SDK and financial safety invariants
 
 ---
 
-## Stage 3C: npm Release Readiness & Multi-Platform Packaging (Next)
+## Stage 3C-A: npm Release Readiness & Package Acceptance (Completed)
 
-**Goal:** Prepare all three SDK packages (`@trivio.ink/core`, `@trivio.ink/node`, `@trivio.ink/react`) for public release on the npm registry.
+**Goal:** Audit public API contracts, eliminate packaging bloat, verify independent consumer installation, and establish release governance before publishing.
+
+- [x] Package manifest audit across `@trivio.ink/core`, `@trivio.ink/node`, and `@trivio.ink/react`
+- [x] Explicit package whitelisting (`"files": ["dist", "README.md"]`) eliminating source code and test suite tarball leakage
+- [x] Independent consumer acceptance test suite (`tests/consumer-acceptance.test.ts` & `scripts/verify-consumer-acceptance.mjs`)
+- [x] JSON serialization safety verified (zero BigInt crash in client ledger outputs)
+- [x] Explicit zero-fee agreement preservation verified across core, node, and react
+- [x] Formal Semantic Versioning & Release Policy documentation (`docs/VERSIONING.md`)
+- [x] npm Trusted Publishing OIDC integration guide (`docs/NPM_TRUSTED_PUBLISHING.md`)
+- [x] Automated release quality gate script (`npm run verify:release`)
+- [x] All three SDKs preserved as private (`"private": true`) pending explicit owner authorization
+- [x] 183 automated tests passing across 8 test files in the monorepo (100% pass rate)
+
+---
+
+## Stage 3C-B: Controlled npm Publication (Next — Requires Explicit Owner Authorization)
+
+**Goal:** Authorize license agreement, configure npm organization scope permissions, and execute controlled initial publication (`v0.1.0`) to the public npm registry.
+
+- [ ] Repository owner formal license decision and LICENSE file creation
+- [ ] npm organization scope (`@trivio.ink`) verification on npmjs.com
+- [ ] Removal of `"private": true` publication guard upon explicit authorization
+- [ ] Initial publication of `@trivio.ink/core@0.1.0`, `@trivio.ink/node@0.1.0`, `@trivio.ink/react@0.1.0`
 
 ---
 
