@@ -57,11 +57,11 @@ export function DocsSidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="w-full md:w-64 flex-shrink-0 border-b md:border-b-0 md:border-r border-trivio-border bg-trivio-midnight/50 p-4 sm:p-6 overflow-y-auto">
+    <aside className="w-full md:w-64 flex-shrink-0 border-b md:border-b-0 md:border-r border-border/80 p-4 sm:p-6 overflow-y-auto">
       <div className="space-y-6">
         {docGroups.map((group) => (
           <div key={group.category} className="space-y-2">
-            <h4 className="text-[11px] font-bold uppercase tracking-wider text-gray-500">
+            <h4 className="text-[11px] font-mono font-bold uppercase tracking-wider text-muted-foreground/80">
               {group.category}
             </h4>
             <ul className="space-y-1 text-xs">
@@ -72,15 +72,22 @@ export function DocsSidebar() {
                     <Link
                       href={item.href}
                       className={cn(
-                        "flex items-center justify-between rounded-md px-2.5 py-1.5 transition-colors font-medium",
+                        "flex items-center justify-between rounded-lg px-3 py-2 transition-all font-medium text-xs",
                         isActive
-                          ? "bg-cyan-500/10 text-trivio-cyan font-semibold border-l-2 border-trivio-cyan"
-                          : "text-gray-400 hover:text-white hover:bg-trivio-navy/40"
+                          ? "bg-foreground text-background font-semibold shadow-sm"
+                          : "text-muted-foreground hover:text-foreground hover:bg-secondary/60"
                       )}
                     >
-                      <span>{item.title}</span>
+                      <span className="truncate">{item.title}</span>
                       {item.tag && (
-                        <span className="text-[9px] uppercase px-1.5 py-0.5 rounded bg-trivio-subtle text-gray-400 border border-trivio-border font-mono">
+                        <span
+                          className={cn(
+                            "text-[9px] uppercase px-1.5 py-0.5 rounded font-mono ml-2 flex-shrink-0",
+                            isActive
+                              ? "bg-background text-foreground border border-background/20"
+                              : "border border-border/80 bg-secondary/50 text-muted-foreground"
+                          )}
+                        >
                           {item.tag}
                         </span>
                       )}

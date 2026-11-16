@@ -11,21 +11,21 @@ export const metadata = {
 export default function LicensingDocumentationPage() {
   return (
     <div className="space-y-8">
-      <div className="space-y-2 border-b border-trivio-border pb-6">
-        <Badge variant="cyan">Open Source License</Badge>
-        <h1 className="text-3xl font-extrabold text-trivio-warm">Apache-2.0 Licensing</h1>
-        <p className="text-sm text-gray-400">
+      <div className="space-y-2 border-b border-border/80 pb-6">
+        <Badge variant="default">Open Source License</Badge>
+        <h1 className="text-3xl font-extrabold text-foreground">Apache-2.0 Licensing</h1>
+        <p className="text-sm text-muted-foreground">
           The legal framework governing Trivio SDK distribution and proprietary boundaries.
         </p>
       </div>
 
-      <div className="space-y-6 text-sm text-gray-300 leading-relaxed">
+      <div className="space-y-6 text-sm text-muted-foreground leading-relaxed">
         <div>
-          <h2 className="text-base font-bold text-trivio-warm mb-2">Permissive Open-Source Scope</h2>
-          <p className="text-xs text-gray-400 mb-2">
-            The three calculation SDK packages (<code className="text-trivio-cyan font-mono">@trivio.ink/core</code>, <code className="text-trivio-cyan font-mono">@trivio.ink/node</code>, and <code className="text-trivio-cyan font-mono">@trivio.ink/react</code>) are licensed under the <strong>Apache License, Version 2.0</strong>.
+          <h2 className="text-base font-bold text-foreground mb-2">Permissive Open-Source Scope</h2>
+          <p className="text-xs text-muted-foreground mb-2">
+            The three calculation SDK packages (<code className="text-foreground font-semibold font-mono">@trivio.ink/core</code>, <code className="text-foreground font-semibold font-mono">@trivio.ink/node</code>, and <code className="text-foreground font-semibold font-mono">@trivio.ink/react</code>) are licensed under the <strong>Apache License, Version 2.0</strong>.
           </p>
-          <ul className="list-disc pl-5 text-xs text-gray-400 space-y-1.5">
+          <ul className="list-disc pl-5 text-xs text-muted-foreground space-y-1.5">
             <li>You may freely embed, run, and modify Trivio SDKs in commercial or open-source products.</li>
             <li>No mandatory paid license or subscription is required to use the open-source SDKs.</li>
             <li>Each package contains standalone LICENSE and NOTICE files.</li>
@@ -33,14 +33,14 @@ export default function LicensingDocumentationPage() {
         </div>
 
         <div>
-          <h2 className="text-base font-bold text-trivio-warm mb-2">Reserved Commercial Trademarks & Services</h2>
-          <p className="text-xs text-gray-400">
-            The Apache-2.0 license grants software copyright permissions, but does not grant rights to Trivio trademarks, brand logos (<code className="text-trivio-cyan font-mono">trivio.ink</code>), or upcoming hosted proprietary cloud microservices (<code className="text-gray-300 font-mono">apps/api</code>, <code className="text-gray-300 font-mono">apps/console</code>).
+          <h2 className="text-base font-bold text-foreground mb-2">Reserved Commercial Trademarks & Services</h2>
+          <p className="text-xs text-muted-foreground">
+            The Apache-2.0 license grants software copyright permissions, but does not grant rights to Trivio trademarks, brand logos (<code className="text-foreground font-semibold font-mono">trivio.ink</code>), or upcoming hosted proprietary cloud microservices (<code className="text-muted-foreground font-mono">apps/api</code>, <code className="text-muted-foreground font-mono">apps/console</code>).
           </p>
         </div>
       </div>
 
-      <div className="pt-6 flex justify-between items-center border-t border-trivio-border">
+      <div className="pt-6 flex justify-between items-center border-t border-border/80">
         <Button asChild variant="outline" size="sm">
           <Link href="/api-reference" className="gap-1.5">
             <ArrowLeft className="w-4 h-4" /> API Reference

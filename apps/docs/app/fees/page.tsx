@@ -32,29 +32,29 @@ const internationalRule: MerchantFeeRule = {
 export default function FeesDocumentationPage() {
   return (
     <div className="space-y-8">
-      <div className="space-y-2 border-b border-trivio-border pb-6">
-        <Badge variant="cyan">Financial Primitives</Badge>
-        <h1 className="text-3xl font-extrabold text-trivio-warm">Fee Agreements & Dynamic Rules</h1>
-        <p className="text-sm text-gray-400">
+      <div className="space-y-2 border-b border-border/80 pb-6">
+        <Badge variant="default">Financial Primitives</Badge>
+        <h1 className="text-3xl font-extrabold text-foreground">Fee Agreements & Dynamic Rules</h1>
+        <p className="text-sm text-muted-foreground">
           How Trivio models merchant discount rates (MDR), scheme assessments, and hierarchical rule evaluation.
         </p>
       </div>
 
-      <div className="space-y-6 text-sm text-gray-300 leading-relaxed">
+      <div className="space-y-6 text-sm text-muted-foreground leading-relaxed">
         <div>
-          <h2 className="text-base font-bold text-trivio-warm mb-2">MerchantFeeRule Data Contract</h2>
-          <p className="text-xs text-gray-400 mb-3">
+          <h2 className="text-base font-bold text-foreground mb-2">MerchantFeeRule Data Contract</h2>
+          <p className="text-xs text-muted-foreground mb-3">
             Every merchant discount agreement is modeled as an immutable rule with explicit priority matching:
           </p>
           <CodeBlock title="fee-rule.ts" code={feeRuleExample} />
         </div>
 
         <div>
-          <h2 className="text-base font-bold text-trivio-warm mb-2">Priority Resolution & Specificity</h2>
-          <p className="text-xs text-gray-400 mb-2">
-            When multiple fee rules match an incoming transaction, the rule with the highest numerical <code className="text-trivio-cyan font-mono">priority</code> is applied.
+          <h2 className="text-base font-bold text-foreground mb-2">Priority Resolution & Specificity</h2>
+          <p className="text-xs text-muted-foreground mb-2">
+            When multiple fee rules match an incoming transaction, the rule with the highest numerical <code className="text-foreground font-semibold font-mono">priority</code> is applied.
           </p>
-          <ul className="list-disc pl-5 text-xs text-gray-400 space-y-1.5">
+          <ul className="list-disc pl-5 text-xs text-muted-foreground space-y-1.5">
             <li>Terminal-specific rules override merchant-wide rules.</li>
             <li>International card rules override domestic blended rules.</li>
             <li>Credit card rules override debit card rules.</li>
@@ -62,7 +62,7 @@ export default function FeesDocumentationPage() {
         </div>
       </div>
 
-      <div className="pt-6 flex justify-between items-center border-t border-trivio-border">
+      <div className="pt-6 flex justify-between items-center border-t border-border/80">
         <Button asChild variant="outline" size="sm">
           <Link href="/quickstart/react" className="gap-1.5">
             <ArrowLeft className="w-4 h-4" /> React Quick Start
