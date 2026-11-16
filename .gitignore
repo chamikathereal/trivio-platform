@@ -15,6 +15,7 @@ coverage/
 *.lcov
 .nyc_output/
 .vitest/
+.playwright-mcp/
 
 # Logs
 logs/
