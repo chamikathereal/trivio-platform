@@ -14,7 +14,7 @@ export function ThemeToggle() {
 
   if (!mounted) {
     return (
-      <div className="w-9 h-9 rounded-full border border-border bg-background/50" />
+      <div className="w-9 h-9 rounded-full border border-white/30 dark:border-white/15 bg-white/10 dark:bg-white/5 backdrop-blur-md" />
     );
   }
 
@@ -23,7 +23,7 @@ export function ThemeToggle() {
   return (
     <button
       onClick={() => setTheme(isDark ? "light" : "dark")}
-      className="relative flex items-center justify-center w-9 h-9 rounded-full border border-border bg-background/60 hover:bg-secondary text-foreground transition-all duration-200 active:scale-95"
+      className="relative flex items-center justify-center w-9 h-9 rounded-full border border-white/30 dark:border-white/15 bg-white/15 dark:bg-white/5 hover:bg-white/30 dark:hover:bg-white/15 text-foreground backdrop-blur-md transition-all duration-200 active:scale-95 shadow-sm"
       aria-label={isDark ? "Switch to light theme" : "Switch to dark theme"}
       title={isDark ? "Light theme" : "Dark theme"}
     >
