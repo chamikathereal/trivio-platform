@@ -112,15 +112,15 @@ export default function HomePage() {
             <span>Stage 3C Complete — Trivio SDKs v0.1.0 Now Live on npm</span>
           </div>
 
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white max-w-4xl mx-auto leading-[1.08] drop-shadow-[0_4px_30px_rgba(0,0,0,0.95)]">
+          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white max-w-4xl mx-auto leading-[1.08] [text-shadow:0_0_35px_rgba(255,255,255,0.5),0_0_70px_rgba(255,255,255,0.25),0_4px_30px_rgba(0,0,0,0.95)]">
             Complex Math,{" "}
-            <span className="font-serif italic font-normal tracking-normal text-zinc-200">
+            <span className="font-serif italic font-normal tracking-normal text-white [text-shadow:0_0_45px_rgba(255,255,255,0.65),0_0_85px_rgba(255,255,255,0.35),0_4px_30px_rgba(0,0,0,0.95)]">
               Delivered to Heaven.
             </span>
           </h1>
 
           <p className="text-base sm:text-xl text-zinc-100 font-medium max-w-2xl mx-auto leading-relaxed drop-shadow-[0_2px_16px_rgba(0,0,0,0.95)]">
-            Trivio is the <strong>Agent of Heaven</strong> sent to save payment engineers from the purgatory of complex financial calculations, IEEE-754 penny drift, and hidden bank fee drift.
+            Trivio is the <strong>Agent of Heaven</strong> sent to save payment engineers from the purgatory of complex financial calculations.
           </p>
 
           {/* CTA Group */}
