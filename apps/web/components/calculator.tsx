@@ -99,159 +99,168 @@ export function SettlementCalculator() {
 
   return (
     <div className="w-full max-w-5xl mx-auto space-y-8">
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      {/* Equal-Height Symmetrical Grid Container */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
         {/* Left: Input Console */}
-        <div className="lg:col-span-6 space-y-6">
-          <Card className="border-border bg-card/80 backdrop-blur-xl shadow-lg">
-            <CardHeader className="pb-4 border-b border-border/60">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-base flex items-center gap-2">
-                  <CalcIcon className="w-4 h-4 text-foreground" />
-                  Transaction & Fee Inputs
-                </CardTitle>
-                <Badge variant="outline" className="font-mono text-[10px]">
-                  Zero-Float Math
-                </Badge>
-              </div>
-              <CardDescription>
-                Configure the gross transaction amount, merchant discount rate, and acquirer rules.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-5 pt-5">
-              {/* Gross Amount Input */}
-              <div>
-                <label className="block text-xs font-semibold text-foreground mb-1.5">
-                  Gross Transaction Amount (USD)
-                </label>
-                <div className="relative">
-                  <DollarSign className="absolute left-3.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    type="number"
-                    step="0.01"
-                    min="1"
-                    value={grossAmount}
-                    onChange={(e) => setGrossAmount(e.target.value)}
-                    className="pl-10 font-mono text-base font-semibold"
-                    placeholder="500.00"
-                  />
+        <div className="lg:col-span-6 flex flex-col h-full">
+          <Card className="border-border bg-card/80 backdrop-blur-xl shadow-lg h-full flex flex-col justify-between">
+            <div>
+              <CardHeader className="pb-4 border-b border-border/60">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-base flex items-center gap-2">
+                    <CalcIcon className="w-4 h-4 text-foreground" />
+                    Transaction & Fee Inputs
+                  </CardTitle>
+                  <Badge variant="outline" className="font-mono text-[10px]">
+                    Zero-Float Math
+                  </Badge>
                 </div>
-              </div>
+                <CardDescription>
+                  Configure the gross transaction amount, merchant discount rate, and acquirer rules.
+                </CardDescription>
+              </CardHeader>
 
-              {/* Rate & Fixed Fee Grid */}
-              <div className="grid grid-cols-2 gap-4">
+              <CardContent className="space-y-5 pt-6">
+                {/* Gross Amount Input */}
                 <div>
                   <label className="block text-xs font-semibold text-foreground mb-1.5">
-                    MDR Rate ({((percentageBps || 0) / 100).toFixed(2)}%)
-                  </label>
-                  <div className="relative">
-                    <Input
-                      type="number"
-                      step="5"
-                      min="0"
-                      max="1000"
-                      value={percentageBps}
-                      onChange={(e) => setPercentageBps(Number(e.target.value))}
-                      className="font-mono pr-12"
-                    />
-                    <span className="absolute right-3.5 top-2.5 text-xs text-muted-foreground font-mono">
-                      bps
-                    </span>
-                  </div>
-                  <span className="text-[10px] text-muted-foreground mt-1 block">
-                    100 bps = 1.00%
-                  </span>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-foreground mb-1.5">
-                    Fixed Transaction Fee
+                    Gross Transaction Amount (USD)
                   </label>
                   <div className="relative">
                     <DollarSign className="absolute left-3.5 top-2.5 h-4 w-4 text-muted-foreground" />
                     <Input
                       type="number"
                       step="0.01"
-                      min="0"
-                      value={fixedFeeDollars}
-                      onChange={(e) => setFixedFeeDollars(e.target.value)}
-                      className="pl-10 font-mono"
+                      min="1"
+                      value={grossAmount}
+                      onChange={(e) => setGrossAmount(e.target.value)}
+                      className="pl-10 font-mono text-base font-semibold"
+                      placeholder="500.00"
                     />
                   </div>
-                  <span className="text-[10px] text-muted-foreground mt-1 block">
-                    Flat per transaction
-                  </span>
-                </div>
-              </div>
-
-              {/* Settlement Calendar & Cut-Off */}
-              <div className="pt-4 border-t border-border/80 space-y-4">
-                <div className="flex items-center gap-2">
-                  <Calendar className="w-4 h-4 text-foreground" />
-                  <h4 className="text-xs font-semibold text-foreground uppercase tracking-wider">
-                    Settlement Calendar & Policy
-                  </h4>
                 </div>
 
+                {/* Rate & Fixed Fee Grid */}
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-[11px] font-medium text-muted-foreground mb-1">
-                      Settlement Cycle
+                    <label className="block text-xs font-semibold text-foreground mb-1.5">
+                      MDR Rate ({((percentageBps || 0) / 100).toFixed(2)}%)
                     </label>
-                    <select
-                      value={cycleDays}
-                      onChange={(e) => setCycleDays(Number(e.target.value))}
-                      className="w-full h-10 rounded-xl border border-border bg-background/80 px-3 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-foreground font-mono transition-colors"
-                    >
-                      <option value={1}>T+1 (Next business day)</option>
-                      <option value={2}>T+2 (Two business days)</option>
-                      <option value={3}>T+3 (Three business days)</option>
-                    </select>
+                    <div className="relative">
+                      <Input
+                        type="number"
+                        step="5"
+                        min="0"
+                        max="1000"
+                        value={percentageBps}
+                        onChange={(e) => setPercentageBps(Number(e.target.value))}
+                        className="font-mono pr-12"
+                      />
+                      <span className="absolute right-3.5 top-2.5 text-xs text-muted-foreground font-mono">
+                        bps
+                      </span>
+                    </div>
+                    <span className="text-[10px] text-muted-foreground mt-1 block">
+                      100 bps = 1.00%
+                    </span>
                   </div>
+
                   <div>
-                    <label className="block text-[11px] font-medium text-muted-foreground mb-1">
-                      Daily Bank Cut-Off (UTC)
+                    <label className="block text-xs font-semibold text-foreground mb-1.5">
+                      Fixed Transaction Fee
                     </label>
-                    <Input
-                      type="text"
-                      value={cutOffTime}
-                      onChange={(e) => setCutOffTime(e.target.value)}
-                      className="font-mono text-xs"
-                      placeholder="16:00"
-                    />
+                    <div className="relative">
+                      <DollarSign className="absolute left-3.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        value={fixedFeeDollars}
+                        onChange={(e) => setFixedFeeDollars(e.target.value)}
+                        className="pl-10 font-mono"
+                      />
+                    </div>
+                    <span className="text-[10px] text-muted-foreground mt-1 block">
+                      Flat per transaction
+                    </span>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-[11px] font-medium text-muted-foreground mb-1">
-                      Transaction Date
-                    </label>
-                    <Input
-                      type="date"
-                      value={transactionDate}
-                      onChange={(e) => setTransactionDate(e.target.value)}
-                      className="font-mono text-xs"
-                    />
+                {/* Settlement Calendar & Cut-Off */}
+                <div className="pt-4 border-t border-border/80 space-y-4">
+                  <div className="flex items-center gap-2">
+                    <Calendar className="w-4 h-4 text-foreground" />
+                    <h4 className="text-xs font-semibold text-foreground uppercase tracking-wider">
+                      Settlement Calendar & Policy
+                    </h4>
                   </div>
-                  <div>
-                    <label className="block text-[11px] font-medium text-muted-foreground mb-1">
-                      Transaction Time (UTC)
-                    </label>
-                    <Input
-                      type="time"
-                      value={transactionTime}
-                      onChange={(e) => setTransactionTime(e.target.value)}
-                      className="font-mono text-xs"
-                    />
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-[11px] font-medium text-muted-foreground mb-1">
+                        Settlement Cycle
+                      </label>
+                      <select
+                        value={cycleDays}
+                        onChange={(e) => setCycleDays(Number(e.target.value))}
+                        className="w-full h-10 rounded-xl border border-border bg-background/80 px-3 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-foreground font-mono transition-colors"
+                      >
+                        <option value={1}>T+1 (Next business day)</option>
+                        <option value={2}>T+2 (Two business days)</option>
+                        <option value={3}>T+3 (Three business days)</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-[11px] font-medium text-muted-foreground mb-1">
+                        Daily Bank Cut-Off (UTC)
+                      </label>
+                      <Input
+                        type="text"
+                        value={cutOffTime}
+                        onChange={(e) => setCutOffTime(e.target.value)}
+                        className="font-mono text-xs"
+                        placeholder="16:00"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-[11px] font-medium text-muted-foreground mb-1">
+                        Transaction Date
+                      </label>
+                      <Input
+                        type="date"
+                        value={transactionDate}
+                        onChange={(e) => setTransactionDate(e.target.value)}
+                        className="font-mono text-xs"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] font-medium text-muted-foreground mb-1">
+                        Transaction Time (UTC)
+                      </label>
+                      <Input
+                        type="time"
+                        value={transactionTime}
+                        onChange={(e) => setTransactionTime(e.target.value)}
+                        className="font-mono text-xs"
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
-            </CardContent>
+              </CardContent>
+            </div>
+
+            {/* Left Card Bottom Invariant Bar (Matches Right Card Footer) */}
+            <div className="p-6 pt-4 text-[11px] text-muted-foreground border-t border-border/40 mt-auto">
+              <strong className="text-foreground">Real-Time Evaluation:</strong> Parameters execute locally inside developer infrastructure with zero network latency.
+            </div>
           </Card>
         </div>
 
         {/* Right: Deterministic Settlement Output */}
-        <div className="lg:col-span-6 space-y-6">
+        <div className="lg:col-span-6 flex flex-col h-full">
           <Card className="border-border bg-card/80 backdrop-blur-xl shadow-lg h-full flex flex-col justify-between">
             <div>
               <CardHeader className="pb-4 border-b border-border/60">
@@ -342,7 +351,8 @@ export function SettlementCalculator() {
               </CardContent>
             </div>
 
-            <div className="p-6 pt-0 text-[11px] text-muted-foreground border-t border-border/40 mt-4">
+            {/* Right Card Bottom Invariant Bar */}
+            <div className="p-6 pt-4 text-[11px] text-muted-foreground border-t border-border/40 mt-auto">
               <strong className="text-foreground">Deterministic Invariant:</strong> Calculations use integer BigInt arithmetic with verified Round-Half-Up (<code className="font-mono text-foreground">roundHalfUpDiv</code>).
             </div>
           </Card>
