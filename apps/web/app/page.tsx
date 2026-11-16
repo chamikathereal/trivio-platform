@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
@@ -88,55 +89,74 @@ export function PayoutCard({ estimate }) {
 
 export default function HomePage() {
   return (
-    <div className="space-y-24 sm:space-y-32 py-10 sm:py-16">
-      {/* 1. Hero Section (Apple Vision Pro & Mindly Aesthetic) */}
-      <section className="container mx-auto px-4 sm:px-6 text-center space-y-6 max-w-5xl">
-        <div className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary/60 px-4 py-1.5 text-xs text-foreground shadow-sm">
-          <Sparkles className="w-3.5 h-3.5 text-foreground" />
-          <span>Stage 3C Complete — Trivio SDKs v0.1.0 Now Live on npm</span>
+    <div className="space-y-24 sm:space-y-32 pb-16">
+      {/* 1. Full-Bleed Heavenly Hero Section starting from top: 0 behind the navbar */}
+      <section className="relative w-full -mt-20 pt-32 sm:pt-40 pb-20 sm:pb-28 overflow-hidden flex flex-col items-center justify-center">
+        {/* Full-bleed background image covering from top 0 to bottom of hero */}
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="/angels-of-salvation.jpg"
+            alt="Trivio — Angels of Salvation Ascending from Purgatory"
+            fill
+            priority
+            className="object-cover object-top brightness-95 dark:brightness-75 contrast-105"
+          />
+          {/* Ethereal Glassmorphism & Contrast Overlays for Razor-Sharp Readability */}
+          <div className="absolute inset-0 bg-background/60 dark:bg-black/65 backdrop-blur-[2px]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-transparent to-background" />
+          <div className="celestial-beam" />
+          <div className="celestial-halo" />
         </div>
 
-        <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-foreground max-w-4xl mx-auto leading-[1.08]">
-          Complex Math,{" "}
-          <span className="font-serif italic font-normal tracking-normal text-muted-foreground">
-            Delivered to Heaven.
-          </span>
-        </h1>
-
-        <p className="text-base sm:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-          Trivio is the <strong>Agent of Heaven</strong> sent to save payment engineers from the purgatory of complex financial calculations, IEEE-754 penny drift, and hidden bank fee drift.
-        </p>
-
-        {/* CTA Group */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
-          <Button asChild size="lg" className="w-full sm:w-auto gap-2 shadow-md">
-            <Link href="/calculator">
-              <Terminal className="w-4 h-4" />
-              Launch Interactive Calculator
-            </Link>
-          </Button>
-
-          <Button asChild size="lg" variant="outline" className="w-full sm:w-auto gap-2">
-            <Link href="/sdks">
-              <Layers className="w-4 h-4" />
-              Explore the 3 SDKs
-            </Link>
-          </Button>
-        </div>
-
-        {/* Quick CLI Bar */}
-        <div className="max-w-md mx-auto pt-2">
-          <div className="flex items-center justify-between rounded-full border border-border bg-card/80 backdrop-blur-md px-5 py-2.5 font-mono text-xs text-foreground shadow-sm">
-            <span className="text-muted-foreground">$</span>
-            <span className="select-all font-semibold">npm install @trivio.ink/core</span>
-            <Badge variant="heaven" className="text-[10px] px-2 py-0.5">
-              Apache-2.0
-            </Badge>
+        {/* Hero Content (Floating directly over the artwork) */}
+        <div className="relative z-10 container mx-auto px-4 sm:px-6 text-center space-y-6 max-w-5xl">
+          <div className="inline-flex items-center gap-2 rounded-full border border-border/80 bg-background/80 backdrop-blur-xl px-4 py-1.5 text-xs text-foreground shadow-sm">
+            <Sparkles className="w-3.5 h-3.5 text-foreground" />
+            <span>Stage 3C Complete — Trivio SDKs v0.1.0 Now Live on npm</span>
           </div>
-        </div>
 
-        {/* Central Heavenly Visual: Origami Sculpted Angel + Mindly Orbiting Cards */}
-        <HeavenlyHeroVisual />
+          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-foreground max-w-4xl mx-auto leading-[1.08] drop-shadow-sm">
+            Complex Math,{" "}
+            <span className="font-serif italic font-normal tracking-normal text-muted-foreground">
+              Delivered to Heaven.
+            </span>
+          </h1>
+
+          <p className="text-base sm:text-xl text-foreground/80 dark:text-zinc-200 font-medium max-w-2xl mx-auto leading-relaxed drop-shadow-sm">
+            Trivio is the <strong>Agent of Heaven</strong> sent to save payment engineers from the purgatory of complex financial calculations, IEEE-754 penny drift, and hidden bank fee drift.
+          </p>
+
+          {/* CTA Group */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
+            <Button asChild size="lg" className="w-full sm:w-auto gap-2 shadow-lg">
+              <Link href="/calculator">
+                <Terminal className="w-4 h-4" />
+                Launch Interactive Calculator
+              </Link>
+            </Button>
+
+            <Button asChild size="lg" variant="outline" className="w-full sm:w-auto gap-2 backdrop-blur-md">
+              <Link href="/sdks">
+                <Layers className="w-4 h-4" />
+                Explore the 3 SDKs
+              </Link>
+            </Button>
+          </div>
+
+          {/* Quick CLI Bar */}
+          <div className="max-w-md mx-auto pt-2">
+            <div className="flex items-center justify-between rounded-full border border-border/80 bg-background/80 backdrop-blur-xl px-5 py-2.5 font-mono text-xs text-foreground shadow-sm">
+              <span className="text-muted-foreground">$</span>
+              <span className="select-all font-semibold">npm install @trivio.ink/core</span>
+              <Badge variant="heaven" className="text-[10px] px-2 py-0.5">
+                Apache-2.0
+              </Badge>
+            </div>
+          </div>
+
+          {/* Mindly Orbiting Floating Cards over the artwork */}
+          <HeavenlyHeroVisual />
+        </div>
       </section>
 
       {/* 2. The Four Divine Decrees / Core Pillars */}

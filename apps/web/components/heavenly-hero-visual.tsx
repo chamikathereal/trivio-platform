@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
-import Image from "next/image";
-import { DollarSign, Percent, Calendar, CheckCircle2, Sparkles } from "lucide-react";
+import { DollarSign, Percent, Calendar, CheckCircle2 } from "lucide-react";
 import gsap from "gsap";
 
 export function HeavenlyHeroVisual() {
@@ -11,27 +10,18 @@ export function HeavenlyHeroVisual() {
   const card2Ref = useRef<HTMLDivElement>(null);
   const card3Ref = useRef<HTMLDivElement>(null);
   const card4Ref = useRef<HTMLDivElement>(null);
-  const heroImageRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Smooth ethereal entrance for the grand masterpiece
-      gsap.from(heroImageRef.current, {
-        scale: 0.95,
-        opacity: 0,
-        duration: 1.4,
-        ease: "power3.out",
-      });
-
       // Orbiting cards stagger float entrance
       const cards = [card1Ref.current, card2Ref.current, card3Ref.current, card4Ref.current];
       gsap.from(cards, {
-        y: 25,
+        y: 35,
         opacity: 0,
-        duration: 1,
+        duration: 1.1,
         stagger: 0.15,
         ease: "power2.out",
-        delay: 0.35,
+        delay: 0.2,
       });
 
       // Subtle persistent floating motions (Mindly-style spatial float)
@@ -82,48 +72,14 @@ export function HeavenlyHeroVisual() {
   return (
     <div
       ref={containerRef}
-      className="relative w-full max-w-5xl mx-auto my-8 select-none px-2 sm:px-4"
+      className="relative w-full max-w-5xl mx-auto pt-6 pb-2 select-none px-2 sm:px-4"
     >
-      {/* 1. Celestial Beam (Apple Vision Pro Overhead Spotlight) */}
-      <div className="celestial-beam" />
-      <div className="celestial-halo" />
-
-      {/* 2. Central Masterpiece: Angels of Salvation ascending from Purgatory */}
-      <div className="relative z-10 mx-auto max-w-4xl">
-        <div
-          ref={heroImageRef}
-          className="relative w-full aspect-[16/9] rounded-3xl overflow-hidden glass-card p-2 sm:p-3 shadow-2xl transition-all duration-700"
-        >
-          <div className="relative w-full h-full rounded-2xl overflow-hidden group">
-            <Image
-              src="/angels-of-salvation.jpg"
-              alt="Trivio — Angels of Salvation Ascending from Financial Purgatory"
-              fill
-              priority
-              className="object-cover transition-transform duration-1000 ease-out group-hover:scale-105"
-            />
-            {/* Soft ethereal bottom gradient vignette */}
-            <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent pointer-events-none" />
-
-            {/* Glassmorphic Title Pill inside the artwork */}
-            <div className="absolute top-3 left-3 sm:top-5 sm:left-5 z-20 flex items-center gap-2 px-3.5 py-1.5 rounded-full glass-pill text-[11px] font-medium tracking-wide text-foreground shadow-sm">
-              <Sparkles className="w-3.5 h-3.5 text-foreground" />
-              <span>Ascent from Financial Purgatory</span>
-            </div>
-
-            {/* Subtle caption badge at bottom */}
-            <div className="absolute bottom-3 left-3 sm:bottom-4 sm:left-5 z-20 hidden sm:flex items-center gap-2 px-3 py-1 rounded-full glass-pill text-[10px] text-foreground/80 font-mono">
-              <span>Agent of Heaven • Deterministic Settlement</span>
-            </div>
-          </div>
-        </div>
-
-        {/* 3. Mindly Floating Pill Cards (Floating around the artwork on md+ screens) */}
-
-        {/* Card 1: Top Left - Gross Minor Units */}
+      {/* Desktop Spatial 4-Card Floating Grid */}
+      <div className="hidden md:grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 z-20">
+        {/* Card 1: Gross Minor Units */}
         <div
           ref={card1Ref}
-          className="hidden md:flex absolute -top-6 -left-6 lg:-left-10 z-20 items-center gap-3.5 px-4 py-3 rounded-2xl glass-orbit max-w-xs transition-all hover:scale-105 duration-300"
+          className="flex items-center gap-3.5 p-4 rounded-2xl glass-orbit transition-all hover:scale-105 duration-300 shadow-xl"
         >
           <div className="w-10 h-10 rounded-xl bg-foreground/10 flex items-center justify-center text-foreground flex-shrink-0">
             <DollarSign className="w-5 h-5" />
@@ -141,10 +97,10 @@ export function HeavenlyHeroVisual() {
           </div>
         </div>
 
-        {/* Card 2: Top Right - Zero Float MDR */}
+        {/* Card 2: Zero Float MDR */}
         <div
           ref={card2Ref}
-          className="hidden md:flex absolute -top-6 -right-6 lg:-right-10 z-20 items-center gap-3.5 px-4 py-3 rounded-2xl glass-orbit max-w-xs transition-all hover:scale-105 duration-300"
+          className="flex items-center gap-3.5 p-4 rounded-2xl glass-orbit transition-all hover:scale-105 duration-300 shadow-xl"
         >
           <div className="w-10 h-10 rounded-xl bg-foreground/10 flex items-center justify-center text-foreground flex-shrink-0">
             <Percent className="w-5 h-5" />
@@ -162,10 +118,10 @@ export function HeavenlyHeroVisual() {
           </div>
         </div>
 
-        {/* Card 3: Bottom Left - Holiday Aware Settlement Calendar */}
+        {/* Card 3: Holiday Aware Settlement Calendar */}
         <div
           ref={card3Ref}
-          className="hidden md:flex absolute -bottom-6 -left-6 lg:-left-10 z-20 items-center gap-3.5 px-4 py-3 rounded-2xl glass-orbit max-w-xs transition-all hover:scale-105 duration-300"
+          className="flex items-center gap-3.5 p-4 rounded-2xl glass-orbit transition-all hover:scale-105 duration-300 shadow-xl"
         >
           <div className="w-10 h-10 rounded-xl bg-foreground/10 flex items-center justify-center text-foreground flex-shrink-0">
             <Calendar className="w-5 h-5" />
@@ -183,10 +139,10 @@ export function HeavenlyHeroVisual() {
           </div>
         </div>
 
-        {/* Card 4: Bottom Right - Net Confirmed Settlement */}
+        {/* Card 4: Net Confirmed Settlement */}
         <div
           ref={card4Ref}
-          className="hidden md:flex absolute -bottom-6 -right-6 lg:-right-10 z-20 items-center gap-3.5 px-4 py-3 rounded-2xl glass-orbit max-w-xs transition-all hover:scale-105 duration-300"
+          className="flex items-center gap-3.5 p-4 rounded-2xl glass-orbit transition-all hover:scale-105 duration-300 shadow-xl"
         >
           <div className="w-10 h-10 rounded-xl bg-foreground text-background flex items-center justify-center flex-shrink-0">
             <CheckCircle2 className="w-5 h-5" />
@@ -206,7 +162,7 @@ export function HeavenlyHeroVisual() {
       </div>
 
       {/* Mobile Floating Grid (Below artwork on small screens) */}
-      <div className="grid grid-cols-2 gap-3 w-full max-w-md mx-auto mt-6 md:hidden z-20">
+      <div className="grid grid-cols-2 gap-3 w-full max-w-md mx-auto mt-4 md:hidden z-20">
         <div className="p-3 rounded-xl glass-card flex flex-col gap-1 text-left">
           <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground uppercase font-semibold">
             <DollarSign className="w-3.5 h-3.5" />
