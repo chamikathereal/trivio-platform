@@ -91,7 +91,7 @@ export default function HomePage() {
   return (
     <div className="space-y-24 sm:space-y-32 pb-16">
       {/* 1. Full-Bleed Heavenly Hero Section starting from top: 0 behind the navbar */}
-      <section className="relative w-full -mt-20 pt-28 sm:pt-36 pb-16 sm:pb-24 overflow-hidden flex flex-col items-center justify-between min-h-[740px] md:min-h-[820px] lg:min-h-[880px]">
+      <section className="relative w-full -mt-20 pt-28 sm:pt-32 pb-12 sm:pb-16 overflow-hidden flex flex-col items-center justify-between min-h-[720px] md:min-h-[780px] lg:min-h-[840px]">
         {/* Full image as background with 100% full natural colors, ZERO blur, and correct proportions */}
         <div className="absolute inset-0 z-0">
           <Image
@@ -102,7 +102,7 @@ export default function HomePage() {
             className="object-cover object-center"
           />
           {/* Natural edge blend at the very bottom into page background */}
-          <div className="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-background via-background/40 to-transparent pointer-events-none" />
+          <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-background via-background/40 to-transparent pointer-events-none z-10" />
         </div>
 
         {/* Hero Content (Floating directly over the unblurred, full-color artwork) */}
