@@ -3,18 +3,26 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const badgeVariants = cva(
-  "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+  "inline-flex items-center rounded-full border px-3 py-1 text-xs font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
   {
     variants: {
       variant: {
         default:
-          "border-transparent bg-trivio-cyan text-trivio-midnight font-bold",
+          "border-transparent bg-foreground text-background shadow font-semibold",
         secondary:
-          "border-trivio-border bg-trivio-subtle text-trivio-warm",
-        outline: "border-trivio-border text-trivio-warm",
-        cyan: "border-cyan-500/30 bg-cyan-500/10 text-trivio-cyan",
-        amber: "border-amber-500/30 bg-amber-500/10 text-amber-400",
-        emerald: "border-emerald-500/30 bg-emerald-500/10 text-emerald-400",
+          "border-border bg-secondary text-secondary-foreground",
+        outline:
+          "border-border bg-transparent text-foreground",
+        heaven:
+          "border-foreground/20 bg-foreground/5 text-foreground backdrop-blur-md font-semibold",
+        muted:
+          "border-border/60 bg-muted/60 text-muted-foreground",
+        cyan:
+          "border-foreground/20 bg-foreground/10 text-foreground font-semibold",
+        amber:
+          "border-foreground/20 bg-foreground/10 text-foreground",
+        emerald:
+          "border-emerald-500/30 bg-emerald-500/10 text-emerald-500",
       },
     },
     defaultVariants: {

@@ -68,42 +68,42 @@ console.log("Cut-off Shifted:", estimate.isPastCutOff); // true (17:30 > 16:00)`
 export default function CoreQuickStartPage() {
   return (
     <div className="space-y-8">
-      <div className="space-y-2 border-b border-trivio-border pb-6">
-        <Badge variant="cyan">Core Engine</Badge>
-        <h1 className="text-3xl font-extrabold text-trivio-warm">@trivio.ink/core Quick Start</h1>
-        <p className="text-sm text-gray-400">
+      <div className="space-y-2 border-b border-border/80 pb-6">
+        <Badge variant="default">Core Engine</Badge>
+        <h1 className="text-3xl font-extrabold text-foreground">@trivio.ink/core Quick Start</h1>
+        <p className="text-sm text-muted-foreground">
           Pure calculation primitives for fee deduction and settlement date estimation.
         </p>
       </div>
 
-      <div className="space-y-6 text-sm text-gray-300">
+      <div className="space-y-6 text-sm text-muted-foreground">
         <div>
-          <h2 className="text-base font-bold text-trivio-warm mb-2">Installation</h2>
+          <h2 className="text-base font-bold text-foreground mb-2">Installation</h2>
           <CodeBlock language="bash" code="npm install @trivio.ink/core" />
         </div>
 
         <div>
-          <h2 className="text-base font-bold text-trivio-warm mb-2">Unified Calculation API</h2>
-          <p className="text-xs text-gray-400 mb-3">
-            The <code className="text-trivio-cyan font-mono">calculatePaymentSettlementEstimate</code> function combines MDR percentage calculations, fixed acquirer levies, and settlement calendar adjustments into a single deterministic call:
+          <h2 className="text-base font-bold text-foreground mb-2">Unified Calculation API</h2>
+          <p className="text-xs text-muted-foreground mb-3">
+            The <code className="text-foreground font-semibold font-mono">calculatePaymentSettlementEstimate</code> function combines MDR percentage calculations, fixed acquirer levies, and settlement calendar adjustments into a single deterministic call:
           </p>
           <CodeBlock title="unified-estimate.ts" code={example} />
         </div>
 
         <div>
-          <h2 className="text-base font-bold text-trivio-warm mb-2">Key Return Properties</h2>
-          <div className="rounded-lg border border-trivio-border bg-trivio-navy/60 p-4 text-xs space-y-2">
+          <h2 className="text-base font-bold text-foreground mb-2">Key Return Properties</h2>
+          <div className="rounded-lg border border-border/80 border-border/80 bg-card/60 backdrop-blur-xl p-4 text-xs space-y-2">
             <p><strong>grossMinor:</strong> Exact integer gross authorized minor units.</p>
             <p><strong>percentageFeeMinor:</strong> Computed percentage MDR deduction.</p>
             <p><strong>fixedFeeMinor:</strong> Fixed per-transaction charge.</p>
             <p><strong>totalFeeMinor:</strong> Combined sum of percentage and fixed fees.</p>
-            <p><strong>netMinor:</strong> Final estimated deposit credit (<code className="text-trivio-cyan font-mono">grossMinor - totalFeeMinor</code>).</p>
-            <p><strong>expectedSettlementDate:</strong> Projected bank deposit clearance date (ISO format <code className="text-trivio-cyan font-mono">YYYY-MM-DD</code>).</p>
+            <p><strong>netMinor:</strong> Final estimated deposit credit (<code className="text-foreground font-semibold font-mono">grossMinor - totalFeeMinor</code>).</p>
+            <p><strong>expectedSettlementDate:</strong> Projected bank deposit clearance date (ISO format <code className="text-foreground font-semibold font-mono">YYYY-MM-DD</code>).</p>
           </div>
         </div>
       </div>
 
-      <div className="pt-6 flex justify-between items-center border-t border-trivio-border">
+      <div className="pt-6 flex justify-between items-center border-t border-border/80">
         <Button asChild variant="outline" size="sm">
           <Link href="/architecture" className="gap-1.5">
             <ArrowLeft className="w-4 h-4" /> Architecture

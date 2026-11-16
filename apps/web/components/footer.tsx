@@ -1,42 +1,51 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ShieldCheck } from "lucide-react";
+import { ShieldCheck, Github, ExternalLink } from "lucide-react";
 
 export function Footer() {
   return (
-    <footer className="w-full border-t border-trivio-border bg-trivio-midnight/90 text-gray-400 py-12 px-4 sm:px-6">
-      <div className="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+    <footer className="w-full border-t border-border bg-background text-muted-foreground py-14 px-4 sm:px-6 relative z-10 transition-colors">
+      <div className="container mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-4 gap-10">
         {/* Brand column */}
         <div className="space-y-4 md:col-span-1">
-          <div className="relative h-9 w-32">
+          <div className="relative h-8 w-32 sm:w-36 flex items-center">
+            {/* Light Mode Logo */}
             <Image
-              src="/logo.png"
+              src="/trivio.ink.white.png"
               alt="Trivio Logo"
               fill
-              className="object-contain"
+              className="object-contain block dark:hidden"
+            />
+            {/* Dark Mode Logo */}
+            <Image
+              src="/trivio.ink.black.png"
+              alt="Trivio Logo"
+              fill
+              className="object-contain hidden dark:block"
             />
           </div>
-          <p className="text-xs text-gray-400 leading-relaxed">
-            Deterministic payment settlement intelligence, dynamic merchant discount rate (MDR) calculations, and holiday-aware settlement calendar forecasting.
+          <p className="text-xs text-muted-foreground leading-relaxed">
+            Deterministic payment settlement intelligence, dynamic merchant discount rate (MDR) modeling, and holiday-aware clearance cycles.
           </p>
-          <div className="text-[11px] text-gray-500 space-y-1">
-            <p className="font-semibold text-gray-400">Trusted • Timeless • Transparent</p>
+          <div className="text-[11px] text-muted-foreground/80 space-y-1">
+            <p className="font-medium text-foreground">The Agent of Heaven for Payment Engineers</p>
             <p>Estd. 2026 • Located in Sri Lanka</p>
           </div>
         </div>
 
         {/* Public Packages */}
         <div className="space-y-3">
-          <h4 className="text-sm font-semibold text-trivio-warm">Open-Source SDKs</h4>
-          <ul className="text-xs space-y-2">
+          <h4 className="text-xs font-semibold uppercase tracking-wider text-foreground">Open-Source SDKs</h4>
+          <ul className="text-xs space-y-2.5">
             <li>
               <a
                 href="https://www.npmjs.com/package/@trivio.ink/core"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-trivio-cyan transition-colors"
+                className="hover:text-foreground transition-colors flex items-center justify-between group"
               >
-                @trivio.ink/core (v0.1.0)
+                <span>@trivio.ink/core</span>
+                <span className="text-[10px] font-mono text-muted-foreground group-hover:text-foreground">v0.1.0</span>
               </a>
             </li>
             <li>
@@ -44,9 +53,10 @@ export function Footer() {
                 href="https://www.npmjs.com/package/@trivio.ink/node"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-trivio-cyan transition-colors"
+                className="hover:text-foreground transition-colors flex items-center justify-between group"
               >
-                @trivio.ink/node (v0.1.0)
+                <span>@trivio.ink/node</span>
+                <span className="text-[10px] font-mono text-muted-foreground group-hover:text-foreground">v0.1.0</span>
               </a>
             </li>
             <li>
@@ -54,9 +64,10 @@ export function Footer() {
                 href="https://www.npmjs.com/package/@trivio.ink/react"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-trivio-cyan transition-colors"
+                className="hover:text-foreground transition-colors flex items-center justify-between group"
               >
-                @trivio.ink/react (v0.1.0)
+                <span>@trivio.ink/react</span>
+                <span className="text-[10px] font-mono text-muted-foreground group-hover:text-foreground">v0.1.0</span>
               </a>
             </li>
           </ul>
@@ -64,57 +75,71 @@ export function Footer() {
 
         {/* Navigation */}
         <div className="space-y-3">
-          <h4 className="text-sm font-semibold text-trivio-warm">Navigation</h4>
-          <ul className="text-xs space-y-2">
+          <h4 className="text-xs font-semibold uppercase tracking-wider text-foreground">Navigation</h4>
+          <ul className="text-xs space-y-2.5">
             <li>
-              <Link href="/sdks" className="hover:text-trivio-cyan transition-colors">
+              <Link href="/sdks" className="hover:text-foreground transition-colors">
                 SDK Architecture
               </Link>
             </li>
             <li>
-              <Link href="/calculator" className="hover:text-trivio-cyan transition-colors">
+              <Link href="/calculator" className="hover:text-foreground transition-colors">
                 Settlement Calculator
               </Link>
             </li>
             <li>
-              <Link href="/about" className="hover:text-trivio-cyan transition-colors">
-                About Trivio
+              <Link href="/about" className="hover:text-foreground transition-colors">
+                About & Mission
               </Link>
             </li>
             <li>
-              <Link href="/cloud" className="hover:text-trivio-cyan transition-colors">
+              <Link href="/cloud" className="hover:text-foreground transition-colors">
                 Cloud Roadmap (Coming Soon)
               </Link>
             </li>
             <li>
-              <Link href="/contact" className="hover:text-trivio-cyan transition-colors">
-                Contact & Support
+              <Link href="/contact" className="hover:text-foreground transition-colors">
+                Contact & Community
               </Link>
             </li>
           </ul>
         </div>
 
-        {/* Legal & Governance */}
+        {/* Financial & Architectural Policies */}
         <div className="space-y-3">
-          <h4 className="text-sm font-semibold text-trivio-warm">Legal & Governance</h4>
-          <p className="text-[11px] text-gray-500 leading-relaxed">
-            The core calculation SDKs are licensed under the Apache License, Version 2.0 (Apache-2.0). All transactional data remains developer-owned and local.
+          <h4 className="text-xs font-semibold uppercase tracking-wider text-foreground">Governance</h4>
+          <p className="text-[11px] leading-relaxed">
+            Calculations run offline inside developer infrastructure without telemetry. Zero cardholder data (PAN, CVV, PIN) is ever processed or stored.
           </p>
-          <div className="flex items-center gap-2 text-xs text-emerald-400">
-            <ShieldCheck className="w-4 h-4" />
-            <span>Developer-Owned Payment Data</span>
+          <div className="pt-2 text-[11px] text-muted-foreground/80 flex items-center gap-1.5">
+            <ShieldCheck className="w-3.5 h-3.5 text-foreground" />
+            <span>Apache-2.0 Open-Source License</span>
           </div>
         </div>
       </div>
 
-      {/* Financial disclaimer */}
-      <div className="container mx-auto mt-8 pt-8 border-t border-trivio-border/60 text-center">
-        <p className="text-[11px] text-gray-500 max-w-4xl mx-auto leading-relaxed">
-          <strong>Settlement Disclaimer:</strong> Calculations and timeline forecasts provided by Trivio SDKs are deterministic mathematical models and financial estimates computed locally. They do not constitute banking advice, binding credit guarantees, or confirmed acquirer settlement credits.
-        </p>
-        <p className="text-[11px] text-gray-600 mt-4 flex items-center justify-center gap-1">
-          © 2026 trivio.ink. All rights reserved. Built with precision for developers worldwide.
-        </p>
+      <div className="container mx-auto max-w-6xl mt-12 pt-6 border-t border-border/60 flex flex-col sm:flex-row items-center justify-between text-xs text-muted-foreground/80 gap-4">
+        <p>© 2026 Trivio Engineering. All rights reserved.</p>
+        <div className="flex items-center gap-4">
+          <a
+            href="https://github.com/trivio-ink/trivio-platform"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-foreground transition-colors flex items-center gap-1"
+          >
+            <Github className="w-3.5 h-3.5" />
+            GitHub
+          </a>
+          <a
+            href="https://docs.trivio.ink"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-foreground transition-colors flex items-center gap-1"
+          >
+            Documentation
+            <ExternalLink className="w-3 h-3" />
+          </a>
+        </div>
       </div>
     </footer>
   );

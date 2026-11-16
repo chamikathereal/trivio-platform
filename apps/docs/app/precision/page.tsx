@@ -20,32 +20,32 @@ const percentageFee = (grossMinor * rateBps + 5000n) / 10000n; // Exact Round-Ha
 export default function PrecisionDocumentationPage() {
   return (
     <div className="space-y-8">
-      <div className="space-y-2 border-b border-trivio-border pb-6">
-        <Badge variant="cyan">Financial Primitives</Badge>
-        <h1 className="text-3xl font-extrabold text-trivio-warm">Zero-Float Monetary Precision</h1>
-        <p className="text-sm text-gray-400">
+      <div className="space-y-2 border-b border-border/80 pb-6">
+        <Badge variant="default">Financial Primitives</Badge>
+        <h1 className="text-3xl font-extrabold text-foreground">Zero-Float Monetary Precision</h1>
+        <p className="text-sm text-muted-foreground">
           Why Trivio enforces minor currency units and BigInt intermediate precision.
         </p>
       </div>
 
-      <div className="space-y-6 text-sm text-gray-300 leading-relaxed">
+      <div className="space-y-6 text-sm text-muted-foreground leading-relaxed">
         <div>
-          <h2 className="text-base font-bold text-trivio-warm mb-2">The Danger of IEEE-754 Floats</h2>
-          <p className="text-xs text-gray-400 mb-3">
-            In standard JavaScript and TypeScript, <code className="text-gray-300 font-mono">0.1 + 0.2 === 0.30000000000000004</code>. In large-scale payment processing, accumulating fractional cent errors across millions of transactions leads to ledger imbalances and reconciliation failures.
+          <h2 className="text-base font-bold text-foreground mb-2">The Danger of IEEE-754 Floats</h2>
+          <p className="text-xs text-muted-foreground mb-3">
+            In standard JavaScript and TypeScript, <code className="text-muted-foreground font-mono">0.1 + 0.2 === 0.30000000000000004</code>. In large-scale payment processing, accumulating fractional cent errors across millions of transactions leads to ledger imbalances and reconciliation failures.
           </p>
           <CodeBlock title="precision.ts" code={precisionExample} />
         </div>
 
         <div>
-          <h2 className="text-base font-bold text-trivio-warm mb-2">Rounding Policy</h2>
-          <p className="text-xs text-gray-400">
-            Trivio implements <strong>Round-Half-Up (<code className="font-mono text-trivio-cyan">roundHalfUpDiv</code>)</strong> as its core arithmetic rounding policy (<code className="font-mono text-trivio-cyan">trivio-mdr-v1-half-up</code>), adding half the divisor (<code className="font-mono text-trivio-cyan">5000n</code> for basis points divisor <code className="font-mono text-trivio-cyan">10000n</code>) before integer division to guarantee deterministic commercial banking behavior without floating-point error.
+          <h2 className="text-base font-bold text-foreground mb-2">Rounding Policy</h2>
+          <p className="text-xs text-muted-foreground">
+            Trivio implements <strong>Round-Half-Up (<code className="font-mono text-foreground font-semibold">roundHalfUpDiv</code>)</strong> as its core arithmetic rounding policy (<code className="font-mono text-foreground font-semibold">trivio-mdr-v1-half-up</code>), adding half the divisor (<code className="font-mono text-foreground font-semibold">5000n</code> for basis points divisor <code className="font-mono text-foreground font-semibold">10000n</code>) before integer division to guarantee deterministic commercial banking behavior without floating-point error.
           </p>
         </div>
       </div>
 
-      <div className="pt-6 flex justify-between items-center border-t border-trivio-border">
+      <div className="pt-6 flex justify-between items-center border-t border-border/80">
         <Button asChild variant="outline" size="sm">
           <Link href="/timezones" className="gap-1.5">
             <ArrowLeft className="w-4 h-4" /> Timezones & Cut-Offs

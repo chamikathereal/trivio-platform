@@ -44,32 +44,32 @@ export const standardPolicy: SettlementPolicy = {
 export default function CalendarsDocumentationPage() {
   return (
     <div className="space-y-8">
-      <div className="space-y-2 border-b border-trivio-border pb-6">
-        <Badge variant="cyan">Financial Primitives</Badge>
-        <h1 className="text-3xl font-extrabold text-trivio-warm">Settlement Calendars & Cycles</h1>
-        <p className="text-sm text-gray-400">
+      <div className="space-y-2 border-b border-border/80 pb-6">
+        <Badge variant="default">Financial Primitives</Badge>
+        <h1 className="text-3xl font-extrabold text-foreground">Settlement Calendars & Cycles</h1>
+        <p className="text-sm text-muted-foreground">
           Forecasting exact deposit clearance dates with holiday and cut-off window adjustments.
         </p>
       </div>
 
-      <div className="space-y-6 text-sm text-gray-300 leading-relaxed">
+      <div className="space-y-6 text-sm text-muted-foreground leading-relaxed">
         <div>
-          <h2 className="text-base font-bold text-trivio-warm mb-2">Configuring Calendars</h2>
-          <p className="text-xs text-gray-400 mb-3">
+          <h2 className="text-base font-bold text-foreground mb-2">Configuring Calendars</h2>
+          <p className="text-xs text-muted-foreground mb-3">
             Acquirers operate across diverse regional banking networks with unique holiday schedules:
           </p>
           <CodeBlock title="calendars.ts" code={calendarExample} />
         </div>
 
         <div>
-          <h2 className="text-base font-bold text-trivio-warm mb-2">Cut-Off Shift Logic</h2>
-          <p className="text-xs text-gray-400">
+          <h2 className="text-base font-bold text-foreground mb-2">Cut-Off Shift Logic</h2>
+          <p className="text-xs text-muted-foreground">
             If a transaction occurs at 17:30 UTC when the acquirer cut-off is 16:00 UTC, the transaction is bundled into the subsequent banking day&apos;s batch before applying the T+N cycle shift.
           </p>
         </div>
       </div>
 
-      <div className="pt-6 flex justify-between items-center border-t border-trivio-border">
+      <div className="pt-6 flex justify-between items-center border-t border-border/80">
         <Button asChild variant="outline" size="sm">
           <Link href="/fees" className="gap-1.5">
             <ArrowLeft className="w-4 h-4" /> Fee Agreements
