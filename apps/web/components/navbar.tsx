@@ -14,14 +14,23 @@ export function Navbar() {
     <header className="sticky top-0 z-50 w-full pt-3 pb-2 px-4 sm:px-6">
       {/* Full Glassmorphic Floating Pill Bar */}
       <div className="mx-auto max-w-6xl rounded-full border border-white/40 dark:border-white/15 bg-white/25 dark:bg-black/40 backdrop-blur-2xl backdrop-saturate-150 shadow-[inset_0_1px_1px_0_rgba(255,255,255,0.7),0_12px_40px_-5px_rgba(0,0,0,0.18)] dark:shadow-[inset_0_1px_1px_0_rgba(255,255,255,0.18),0_12px_40px_-5px_rgba(0,0,0,0.7)] px-4 sm:px-6 py-2.5 flex items-center justify-between transition-all">
-        {/* Brand logo - strictly preserved without alteration */}
+        {/* Brand logo — Light & Dark theme responsive */}
         <Link href="/" className="flex items-center gap-3 group">
-          <div className="relative h-8 w-28 sm:w-32">
+          <div className="relative h-8 w-28 sm:w-36 flex items-center">
+            {/* Light Mode Logo: trivio.ink.white.png (dark brand for light backgrounds) */}
             <Image
-              src="/logo.png"
+              src="/trivio.ink.white.png"
               alt="Trivio Logo"
               fill
-              className="object-contain"
+              className="object-contain block dark:hidden"
+              priority
+            />
+            {/* Dark Mode Logo: trivio.ink.black.png (light brand for dark backgrounds) */}
+            <Image
+              src="/trivio.ink.black.png"
+              alt="Trivio Logo"
+              fill
+              className="object-contain hidden dark:block"
               priority
             />
           </div>

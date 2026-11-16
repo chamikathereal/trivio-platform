@@ -8,12 +8,20 @@ export function Footer() {
       <div className="container mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-4 gap-10">
         {/* Brand column */}
         <div className="space-y-4 md:col-span-1">
-          <div className="relative h-8 w-32">
+          <div className="relative h-8 w-32 sm:w-36 flex items-center">
+            {/* Light Mode Logo */}
             <Image
-              src="/logo.png"
+              src="/trivio.ink.white.png"
               alt="Trivio Logo"
               fill
-              className="object-contain"
+              className="object-contain block dark:hidden"
+            />
+            {/* Dark Mode Logo */}
+            <Image
+              src="/trivio.ink.black.png"
+              alt="Trivio Logo"
+              fill
+              className="object-contain hidden dark:block"
             />
           </div>
           <p className="text-xs text-muted-foreground leading-relaxed">

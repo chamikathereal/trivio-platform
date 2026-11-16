@@ -12,12 +12,21 @@ export function DocsNavbar() {
       <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6">
         <div className="flex items-center gap-4">
           <Link href="/" className="flex items-center gap-3">
-            <div className="relative h-8 w-28">
+            <div className="relative h-8 w-28 sm:w-32 flex items-center">
+              {/* Light Mode Logo */}
               <Image
-                src="/logo.png"
+                src="/trivio.ink.white.png"
                 alt="Trivio Logo"
                 fill
-                className="object-contain"
+                className="object-contain block dark:hidden"
+                priority
+              />
+              {/* Dark Mode Logo */}
+              <Image
+                src="/trivio.ink.black.png"
+                alt="Trivio Logo"
+                fill
+                className="object-contain hidden dark:block"
                 priority
               />
             </div>
