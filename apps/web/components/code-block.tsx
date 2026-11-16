@@ -2,14 +2,17 @@
 
 import React, { useState } from "react";
 import { Check, Copy, Terminal } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface CodeBlockProps {
   code: string;
   language?: string;
   title?: string;
+  className?: string;
+  maxHeight?: string;
 }
 
-export function CodeBlock({ code, language = "typescript", title }: CodeBlockProps) {
+export function CodeBlock({ code, language = "typescript", title, className, maxHeight }: CodeBlockProps) {
   const [copied, setCopied] = useState(false);
 
   const copyToClipboard = async () => {
@@ -82,9 +85,15 @@ export function CodeBlock({ code, language = "typescript", title }: CodeBlockPro
   };
 
   return (
-    <div className="relative rounded-2xl border border-zinc-300 dark:border-zinc-800 bg-zinc-50 dark:bg-[#090a0c] overflow-hidden shadow-2xl font-mono text-xs transition-all duration-300">
+    <div
+      className={cn(
+        "relative flex flex-col rounded-2xl border border-zinc-300 dark:border-zinc-800 bg-zinc-50 dark:bg-[#090a0c] overflow-hidden shadow-2xl font-mono text-xs transition-all duration-300",
+        className
+      )}
+      style={maxHeight ? { maxHeight } : undefined}
+    >
       {/* 1. Authentic macOS / Linux Terminal Window Titlebar */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-200 dark:border-zinc-800/80 bg-zinc-100/90 dark:bg-[#121316] select-none">
+      <div className="flex-shrink-0 flex items-center justify-between px-4 py-3 border-b border-zinc-200 dark:border-zinc-800/80 bg-zinc-100/90 dark:bg-[#121316] select-none">
         {/* Left: macOS Traffic Light Window Controls */}
         <div className="flex items-center gap-2">
           <span className="w-3 h-3 rounded-full bg-[#ff5f56] border border-[#e0443e]/50 inline-block shadow-sm" />
@@ -123,9 +132,9 @@ export function CodeBlock({ code, language = "typescript", title }: CodeBlockPro
         </div>
       </div>
 
-      {/* 2. Terminal Editor Body with Line Numbers */}
-      <div className="p-4 sm:p-5 overflow-x-auto font-mono text-xs leading-relaxed selection:bg-foreground selection:text-background">
-        <pre className="table w-full">
+      {/* 2. Terminal Editor Body with Line Numbers & Vertical Scrollbar */}
+      <div className="flex-1 min-h-0 overflow-y-auto overflow-x-auto p-4 sm:p-5 font-mono text-xs leading-relaxed selection:bg-foreground selection:text-background terminal-scroll">
+        <table className="w-full border-collapse">
           <tbody>
             {lines.map((line, idx) => (
               <tr key={idx} className="hover:bg-foreground/[0.04] transition-colors rounded">
@@ -138,11 +147,11 @@ export function CodeBlock({ code, language = "typescript", title }: CodeBlockPro
               </tr>
             ))}
           </tbody>
-        </pre>
+        </table>
       </div>
 
       {/* 3. Authentic Terminal Bottom Status Bar (tmux / vim style) */}
-      <div className="flex items-center justify-between px-4 py-2 border-t border-zinc-200 dark:border-zinc-800/80 bg-zinc-100/80 dark:bg-[#0f1012] text-[10px] font-mono text-muted-foreground select-none">
+      <div className="flex-shrink-0 flex items-center justify-between px-4 py-2 border-t border-zinc-200 dark:border-zinc-800/80 bg-zinc-100/80 dark:bg-[#0f1012] text-[10px] font-mono text-muted-foreground select-none">
         <div className="flex items-center gap-2 sm:gap-3">
           <span className="flex items-center gap-1">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block animate-pulse" />

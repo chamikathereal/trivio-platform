@@ -263,13 +263,13 @@ export function SDKsShowcase() {
               </div>
 
               {/* Body: Left Specs & Right Terminal */}
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-                <div className="lg:col-span-5 space-y-6">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch lg:h-[415px]">
+                <div className="lg:col-span-5 flex flex-col justify-between h-full space-y-4">
                   <div className="space-y-3">
                     <h3 className="text-xs font-mono uppercase tracking-wider text-muted-foreground font-semibold">
                       Architectural Invariants
                     </h3>
-                    <div className="space-y-3">
+                    <div className="space-y-2.5">
                       <div className="p-3.5 rounded-2xl border border-border/80 bg-background/50 space-y-1">
                         <div className="flex items-center gap-2 text-foreground font-semibold text-xs">
                           <CheckCircle2 className="w-4 h-4 text-emerald-500" />
@@ -305,7 +305,7 @@ export function SDKsShowcase() {
                     </div>
                   </div>
 
-                  <div className="space-y-2">
+                  <div className="space-y-1.5 pt-2">
                     <span className="text-[11px] font-mono text-muted-foreground">
                       Install via npm:
                     </span>
@@ -313,11 +313,12 @@ export function SDKsShowcase() {
                   </div>
                 </div>
 
-                <div className="lg:col-span-7">
+                <div className="lg:col-span-7 h-[360px] lg:h-full min-h-0">
                   <CodeBlock
                     title="@trivio.ink/core — Pure Deterministic Math"
                     code={coreCode}
                     language="typescript"
+                    className="h-full"
                   />
                 </div>
               </div>
@@ -367,13 +368,13 @@ export function SDKsShowcase() {
               </div>
 
               {/* Body: Left Specs & Right Terminal */}
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-                <div className="lg:col-span-5 space-y-6">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch lg:h-[415px]">
+                <div className="lg:col-span-5 flex flex-col justify-between h-full space-y-4">
                   <div className="space-y-3">
                     <h3 className="text-xs font-mono uppercase tracking-wider text-muted-foreground font-semibold">
                       Architectural Invariants
                     </h3>
-                    <div className="space-y-3">
+                    <div className="space-y-2.5">
                       <div className="p-3.5 rounded-2xl border border-border/80 bg-background/50 space-y-1">
                         <div className="flex items-center gap-2 text-foreground font-semibold text-xs">
                           <CheckCircle2 className="w-4 h-4 text-emerald-500" />
@@ -409,7 +410,7 @@ export function SDKsShowcase() {
                     </div>
                   </div>
 
-                  <div className="space-y-2">
+                  <div className="space-y-1.5 pt-2">
                     <span className="text-[11px] font-mono text-muted-foreground">
                       Install via npm:
                     </span>
@@ -417,11 +418,12 @@ export function SDKsShowcase() {
                   </div>
                 </div>
 
-                <div className="lg:col-span-7">
+                <div className="lg:col-span-7 h-[360px] lg:h-full min-h-0">
                   <CodeBlock
                     title="@trivio.ink/node — Backend Ledger Client"
                     code={nodeCode}
                     language="typescript"
+                    className="h-full"
                   />
                 </div>
               </div>
@@ -471,13 +473,13 @@ export function SDKsShowcase() {
               </div>
 
               {/* Body: Left Specs & Right Terminal */}
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-                <div className="lg:col-span-5 space-y-6">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch lg:h-[415px]">
+                <div className="lg:col-span-5 flex flex-col justify-between h-full space-y-4">
                   <div className="space-y-3">
                     <h3 className="text-xs font-mono uppercase tracking-wider text-muted-foreground font-semibold">
                       Architectural Invariants
                     </h3>
-                    <div className="space-y-3">
+                    <div className="space-y-2.5">
                       <div className="p-3.5 rounded-2xl border border-border/80 bg-background/50 space-y-1">
                         <div className="flex items-center gap-2 text-foreground font-semibold text-xs">
                           <CheckCircle2 className="w-4 h-4 text-emerald-500" />
@@ -513,7 +515,7 @@ export function SDKsShowcase() {
                     </div>
                   </div>
 
-                  <div className="space-y-2">
+                  <div className="space-y-1.5 pt-2">
                     <span className="text-[11px] font-mono text-muted-foreground">
                       Install via npm:
                     </span>
@@ -521,11 +523,12 @@ export function SDKsShowcase() {
                   </div>
                 </div>
 
-                <div className="lg:col-span-7">
+                <div className="lg:col-span-7 h-[360px] lg:h-full min-h-0">
                   <CodeBlock
                     title="@trivio.ink/react — UI Payout Breakdown"
                     code={reactCode}
                     language="typescript"
+                    className="h-full"
                   />
                 </div>
               </div>
