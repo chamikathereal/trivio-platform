@@ -5,16 +5,18 @@ import Image from "next/image";
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
-import { Menu, X, Github, ExternalLink, Terminal } from "lucide-react";
+import { ThemeToggle } from "./theme-toggle";
+import { Menu, X, Github, ExternalLink, Calculator } from "lucide-react";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-trivio-border bg-trivio-midnight/80 backdrop-blur-md">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6">
-        <Link href="/" className="flex items-center gap-3">
-          <div className="relative h-9 w-32 sm:w-36">
+    <header className="sticky top-0 z-50 w-full pt-3 pb-2 px-4 sm:px-6">
+      <div className="mx-auto max-w-6xl rounded-full border border-border/80 bg-background/80 backdrop-blur-2xl shadow-sm px-4 sm:px-6 py-2.5 flex items-center justify-between transition-all">
+        {/* Brand logo - strictly preserved without alteration */}
+        <Link href="/" className="flex items-center gap-3 group">
+          <div className="relative h-8 w-28 sm:w-32">
             <Image
               src="/logo.png"
               alt="Trivio Logo"
@@ -23,115 +25,148 @@ export function Navbar() {
               priority
             />
           </div>
-          <Badge variant="cyan" className="hidden sm:inline-flex text-[10px]">
+          <Badge variant="heaven" className="hidden lg:inline-flex text-[10px] px-2.5 py-0.5">
             v0.1.0 Live
           </Badge>
         </Link>
 
-        {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
+        {/* Desktop Navigation Links */}
+        <nav className="hidden md:flex items-center gap-6 text-xs lg:text-sm font-medium">
           <Link
             href="/sdks"
-            className="text-gray-300 hover:text-trivio-cyan transition-colors"
+            className="text-muted-foreground hover:text-foreground transition-colors"
           >
             SDKs
           </Link>
           <Link
             href="/calculator"
-            className="text-gray-300 hover:text-trivio-cyan transition-colors"
+            className="text-muted-foreground hover:text-foreground transition-colors"
           >
-            Interactive Demo
+            Calculator
           </Link>
           <Link
             href="/about"
-            className="text-gray-300 hover:text-trivio-cyan transition-colors"
+            className="text-muted-foreground hover:text-foreground transition-colors"
           >
             About
           </Link>
           <Link
             href="/cloud"
-            className="text-gray-300 hover:text-trivio-cyan transition-colors flex items-center gap-1.5"
+            className="text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1.5"
           >
             Cloud
-            <span className="text-[10px] text-amber-400 font-semibold border border-amber-500/30 px-1 rounded">
+            <span className="text-[10px] text-foreground/80 border border-border px-1.5 py-0.2 rounded-full font-mono">
               Soon
             </span>
           </Link>
           <a
-            href="https://github.com/trivio-ink/trivio-platform"
+            href="https://docs.trivio.ink"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-gray-300 hover:text-trivio-cyan transition-colors flex items-center gap-1"
+            className="text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
           >
             Docs
-            <ExternalLink className="w-3 h-3 text-gray-400" />
+            <ExternalLink className="w-3 h-3 text-muted-foreground" />
           </a>
         </nav>
 
-        {/* Action Buttons */}
-        <div className="hidden md:flex items-center gap-3">
+        {/* Action Controls & Theme Toggle */}
+        <div className="hidden md:flex items-center gap-2.5">
           <a
             href="https://github.com/trivio-ink/trivio-platform"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-gray-400 hover:text-trivio-warm transition-colors p-2"
+            className="text-muted-foreground hover:text-foreground transition-colors p-2 rounded-full hover:bg-secondary"
             aria-label="GitHub Repository"
           >
-            <Github className="w-5 h-5" />
+            <Github className="w-4 h-4" />
           </a>
-          <Button asChild size="sm" variant="default" className="gap-2">
+
+          <ThemeToggle />
+
+          <Button asChild size="sm" variant="default" className="rounded-full gap-2 px-4 shadow-sm">
             <Link href="/calculator">
-              <Terminal className="w-4 h-4" />
-              Try Calculator
+              <Calculator className="w-3.5 h-3.5" />
+              Launch Calculator
             </Link>
           </Button>
         </div>
 
         {/* Mobile menu trigger */}
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="md:hidden p-2 text-gray-400 hover:text-white"
-          aria-label="Toggle menu"
-        >
-          {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6 text-trivio-cyan" />}
-        </button>
+        <div className="flex md:hidden items-center gap-2">
+          <ThemeToggle />
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="p-2 text-foreground hover:bg-secondary rounded-full transition-colors"
+            aria-label="Toggle navigation menu"
+          >
+            {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile nav drawer */}
       {isOpen && (
-        <div className="md:hidden border-b border-trivio-border bg-trivio-midnight px-4 pt-2 pb-6 space-y-4">
-          <Link
-            href="/sdks"
-            onClick={() => setIsOpen(false)}
-            className="block py-2 text-base font-medium text-gray-200 hover:text-trivio-cyan"
-          >
-            SDKs
-          </Link>
-          <Link
-            href="/calculator"
-            onClick={() => setIsOpen(false)}
-            className="block py-2 text-base font-medium text-gray-200 hover:text-trivio-cyan"
-          >
-            Interactive Demo
-          </Link>
-          <Link
-            href="/about"
-            onClick={() => setIsOpen(false)}
-            className="block py-2 text-base font-medium text-gray-200 hover:text-trivio-cyan"
-          >
-            About
-          </Link>
-          <Link
-            href="/cloud"
-            onClick={() => setIsOpen(false)}
-            className="block py-2 text-base font-medium text-gray-200 hover:text-trivio-cyan"
-          >
-            Cloud (Coming Soon)
-          </Link>
-          <div className="pt-2 flex flex-col gap-2">
-            <Button asChild size="sm" className="w-full">
-              <Link href="/calculator">Launch Interactive Demo</Link>
+        <div className="md:hidden mt-2 mx-auto max-w-6xl rounded-2xl border border-border bg-background/95 backdrop-blur-2xl p-6 shadow-xl space-y-4 animate-accordion-down">
+          <nav className="flex flex-col space-y-3 text-sm font-medium">
+            <Link
+              href="/sdks"
+              onClick={() => setIsOpen(false)}
+              className="px-3 py-2 rounded-lg text-foreground hover:bg-secondary transition-colors"
+            >
+              SDKs Architecture
+            </Link>
+            <Link
+              href="/calculator"
+              onClick={() => setIsOpen(false)}
+              className="px-3 py-2 rounded-lg text-foreground hover:bg-secondary transition-colors"
+            >
+              Interactive Calculator
+            </Link>
+            <Link
+              href="/about"
+              onClick={() => setIsOpen(false)}
+              className="px-3 py-2 rounded-lg text-foreground hover:bg-secondary transition-colors"
+            >
+              About & Mission
+            </Link>
+            <Link
+              href="/cloud"
+              onClick={() => setIsOpen(false)}
+              className="px-3 py-2 rounded-lg text-foreground hover:bg-secondary transition-colors flex items-center justify-between"
+            >
+              <span>Cloud Roadmap</span>
+              <span className="text-[10px] text-foreground/80 border border-border px-1.5 py-0.5 rounded-full font-mono">
+                Soon
+              </span>
+            </Link>
+            <a
+              href="https://docs.trivio.ink"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-3 py-2 rounded-lg text-foreground hover:bg-secondary transition-colors flex items-center justify-between"
+            >
+              <span>Documentation</span>
+              <ExternalLink className="w-4 h-4 text-muted-foreground" />
+            </a>
+          </nav>
+
+          <div className="pt-4 border-t border-border flex flex-col gap-2.5">
+            <Button asChild size="default" variant="default" className="w-full rounded-full gap-2 justify-center">
+              <Link href="/calculator" onClick={() => setIsOpen(false)}>
+                <Calculator className="w-4 h-4" />
+                Launch Calculator
+              </Link>
             </Button>
+            <a
+              href="https://github.com/trivio-ink/trivio-platform"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 py-2 text-xs font-mono text-muted-foreground hover:text-foreground"
+            >
+              <Github className="w-4 h-4" />
+              github.com/trivio-ink/trivio-platform
+            </a>
           </div>
         </div>
       )}

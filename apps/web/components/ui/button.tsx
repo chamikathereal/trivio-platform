@@ -4,26 +4,30 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex items-center justify-center whitespace-nowrap rounded-full text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98]",
   {
     variants: {
       variant: {
         default:
-          "bg-trivio-cyan text-trivio-midnight font-semibold shadow hover:bg-cyan-300 active:scale-[0.98]",
+          "bg-foreground text-background hover:bg-foreground/90 shadow-sm",
         destructive:
           "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
         outline:
-          "border border-trivio-border bg-transparent text-trivio-warm hover:bg-trivio-subtle hover:text-trivio-cyan",
+          "border border-border bg-background/60 backdrop-blur-sm text-foreground hover:bg-secondary",
         secondary:
-          "bg-trivio-subtle text-trivio-warm border border-trivio-border hover:bg-trivio-navy",
-        ghost: "hover:bg-trivio-subtle hover:text-trivio-cyan text-trivio-warm",
-        link: "text-trivio-cyan underline-offset-4 hover:underline",
+          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        ghost:
+          "hover:bg-secondary text-foreground",
+        link:
+          "text-foreground underline-offset-4 hover:underline rounded-none",
+        celestial:
+          "border border-foreground/20 bg-foreground/5 hover:bg-foreground/10 text-foreground backdrop-blur-md shadow-sm",
       },
       size: {
-        default: "h-10 px-4 py-2",
-        sm: "h-8 rounded-md px-3 text-xs",
-        lg: "h-11 rounded-md px-8 text-base",
-        icon: "h-10 w-10",
+        default: "h-10 px-5 py-2",
+        sm: "h-8 px-3.5 text-xs",
+        lg: "h-11 px-7 text-base font-semibold",
+        icon: "h-10 w-10 p-0",
       },
     },
     defaultVariants: {

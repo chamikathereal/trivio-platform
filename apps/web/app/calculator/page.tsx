@@ -9,34 +9,36 @@ export const metadata = {
 
 export default function CalculatorPage() {
   return (
-    <div className="container mx-auto px-4 sm:px-6 py-12 md:py-16 space-y-12">
+    <div className="container mx-auto px-4 sm:px-6 py-12 md:py-20 space-y-14 max-w-5xl">
       <div className="text-center space-y-4 max-w-3xl mx-auto">
-        <Badge variant="cyan">Real-time Calculation</Badge>
-        <h1 className="text-3xl sm:text-5xl font-extrabold text-trivio-warm">
+        <Badge variant="heaven">Live Browser Calculation</Badge>
+        <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-foreground">
           Settlement Intelligence Calculator
         </h1>
-        <p className="text-base text-gray-400 leading-relaxed">
-          This interactive tool executes directly against <code className="text-trivio-cyan font-mono">@trivio.ink/core</code> in your browser. All monetary math uses BigInt integer precision without floating-point approximations.
+        <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+          This interactive console executes directly against <code className="text-foreground font-mono font-semibold">@trivio.ink/core</code> locally in your browser. All monetary calculations preserve exact minor units using BigInt arithmetic without floating-point approximations.
         </p>
       </div>
 
       <SettlementCalculator />
 
       {/* Mathematical rules explanation */}
-      <div className="max-w-4xl mx-auto rounded-lg border border-trivio-border bg-trivio-navy/60 p-6 space-y-4 text-xs text-gray-300">
-        <h3 className="text-sm font-semibold text-trivio-warm">How the Trivio Engine Evaluates Settlement:</h3>
-        <ol className="list-decimal pl-5 space-y-2 leading-relaxed">
+      <div className="max-w-4xl mx-auto rounded-2xl border border-border bg-card/60 backdrop-blur-xl p-8 space-y-5 text-xs text-muted-foreground">
+        <h3 className="text-sm font-semibold uppercase tracking-wider text-foreground">
+          How the Trivio Settlement Engine Computes Payouts:
+        </h3>
+        <ol className="list-decimal pl-5 space-y-3 leading-relaxed">
           <li>
-            <strong>Minor Unit Conversion:</strong> Amounts are converted to integer minor units (e.g., $10,000.00 becomes 1,000,000 minor units).
+            <strong className="text-foreground">Minor Currency Unit Conversion:</strong> Inputs are converted to integer minor units (e.g., $500.00 becomes 50,000 minor units).
           </li>
           <li>
-            <strong>Percentage Fee Calculation:</strong> Percentage rate is expressed in basis points (1 bps = 0.01%). The calculation performs <code className="font-mono text-trivio-cyan">(grossMinor * bps + 5000n) / 10000n</code> with deterministic round-half-up division (<code className="font-mono text-trivio-cyan">roundHalfUpDiv</code>).
+            <strong className="text-foreground">Deterministic Percentage MDR:</strong> Rates are evaluated in basis points (1 bps = 0.01%). The calculation computes <code className="font-mono text-foreground font-semibold">(grossMinor * bps + 5000n) / 10000n</code> with deterministic round-half-up division (<code className="font-mono text-foreground">roundHalfUpDiv</code>).
           </li>
           <li>
-            <strong>Fixed Deductions:</strong> Flat acquirer levies or wire charges are added directly to the percentage deduction.
+            <strong className="text-foreground">Fixed Deductions:</strong> Flat acquirer levies, batch processing charges, or wire fees are added directly in integer minor units.
           </li>
           <li>
-            <strong>Cut-Off & Calendar Shift:</strong> If the transaction timestamp is after the daily cut-off time (e.g. 16:00 UTC), the settlement cycle begins on the next business day. Weekends and registered bank holidays are automatically skipped.
+            <strong className="text-foreground">Cut-Off & Calendar Forward-Shift:</strong> If the transaction timestamp exceeds the daily acquirer cut-off window (e.g. 16:00 UTC), the settlement cycle rolls forward to the subsequent business day. Weekends and registered bank holidays are automatically bypassed.
           </li>
         </ol>
       </div>
