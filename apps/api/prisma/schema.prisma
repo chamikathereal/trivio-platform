@@ -1,0 +1,193 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Workspace {
+  id        String   @id @default(uuid())
+  name      String
+  slug      String   @unique
+  status    String   @default("ACTIVE")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  members             WorkspaceMember[]
+  merchants           Merchant[]
+  feeAgreements       FeeAgreement[]
+  settlementPolicies  SettlementPolicy[]
+  settlementCalendars SettlementCalendar[]
+  estimateRecords     EstimateRecord[]
+  auditEvents         AuditEvent[]
+
+  @@map("workspaces")
+}
+
+model WorkspaceMember {
+  id          String   @id @default(uuid())
+  workspaceId String
+  userId      String
+  role        String   @default("MEMBER") // OWNER, ADMIN, MEMBER, VIEWER
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  workspace Workspace    @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  user      UserIdentity @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([workspaceId, userId])
+  @@index([workspaceId])
+  @@index([userId])
+  @@map("workspace_members")
+}
+
+model UserIdentity {
+  id         String   @id @default(uuid())
+  externalId String?  @unique
+  email      String   @unique
+  name       String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  memberships WorkspaceMember[]
+
+  @@map("user_identities")
+}
+
+model Merchant {
+  id          String   @id @default(uuid())
+  workspaceId String
+  name        String
+  code        String
+  currency    String   @default("USD")
+  acquirerId  String   @default("ACQ_DEMO")
+  status      String   @default("ACTIVE")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  workspace          Workspace          @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  feeAgreements      FeeAgreement[]
+  settlementPolicies SettlementPolicy[]
+  estimateRecords    EstimateRecord[]
+
+  @@unique([workspaceId, code])
+  @@index([workspaceId])
+  @@map("merchants")
+}
+
+model FeeAgreement {
+  id            String    @id @default(uuid())
+  workspaceId   String
+  merchantId    String?
+  name          String
+  version       String    @default("1.0.0")
+  status        String    @default("ACTIVE") // ACTIVE, DRAFT, DEPRECATED
+  acquirerId    String    @default("ACQ_DEMO")
+  percentageBps Int // 220 = 2.20% MDR
+  fixedFeeMinor BigInt // Minor units: 30 = $0.30
+  minFeeMinor   BigInt? // Minor units minimum cap
+  maxFeeMinor   BigInt? // Minor units maximum cap
+  effectiveFrom DateTime  @default(now())
+  effectiveTo   DateTime?
+  priority      Int       @default(0)
+  rateSource    String    @default("merchant_configured")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  merchant  Merchant? @relation(fields: [merchantId], references: [id], onDelete: SetNull)
+
+  @@index([workspaceId])
+  @@index([merchantId])
+  @@map("fee_agreements")
+}
+
+model SettlementPolicy {
+  id              String   @id @default(uuid())
+  workspaceId     String
+  merchantId      String?
+  name            String
+  version         String   @default("1.0.0")
+  status          String   @default("ACTIVE")
+  acquirerId      String   @default("ACQ_DEMO")
+  cycleDays       Int      @default(2) // T+2
+  cycleUnit       String   @default("business_days")
+  cutOffTimeUtc   String   @default("16:00")
+  timeZone        String   @default("America/New_York")
+  calendarId      String?
+  weekendHandling String   @default("following_business_day") // following_business_day, preceding_business_day, no_adjustment
+  effectiveFrom   DateTime @default(now())
+  priority        Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  workspace Workspace           @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  merchant  Merchant?           @relation(fields: [merchantId], references: [id], onDelete: SetNull)
+  calendar  SettlementCalendar? @relation(fields: [calendarId], references: [id], onDelete: SetNull)
+
+  @@index([workspaceId])
+  @@index([merchantId])
+  @@index([calendarId])
+  @@map("settlement_policies")
+}
+
+model SettlementCalendar {
+  id          String   @id @default(uuid())
+  workspaceId String
+  name        String
+  version     String   @default("1.0.0")
+  timeZone    String   @default("America/New_York")
+  workingDays Int[] // [1, 2, 3, 4, 5]
+  holidays    String[] // ["2026-01-01", "2026-12-25"]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  workspace          Workspace          @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  settlementPolicies SettlementPolicy[]
+
+  @@index([workspaceId])
+  @@map("settlement_calendars")
+}
+
+model EstimateRecord {
+  id                     String   @id @default(uuid())
+  workspaceId            String
+  merchantId             String?
+  grossMinor             BigInt
+  netMinor               BigInt
+  totalFeeMinor          BigInt
+  currency               String
+  transactionTime        DateTime
+  expectedSettlementDate String
+  isPastCutOff           Boolean
+  status                 String   @default("ESTIMATED")
+  feeBreakdownJson       Json
+  settlementPolicyJson   Json
+  createdAt              DateTime @default(now())
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  merchant  Merchant? @relation(fields: [merchantId], references: [id], onDelete: SetNull)
+
+  @@index([workspaceId])
+  @@index([merchantId])
+  @@map("estimate_records")
+}
+
+model AuditEvent {
+  id          String   @id @default(uuid())
+  workspaceId String
+  actorId     String
+  action      String // e.g., WORKSPACE_CREATED, MERCHANT_UPDATED
+  entityType  String // e.g., Merchant, FeeAgreement
+  entityId    String
+  payloadJson Json
+  timestamp   DateTime @default(now())
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@index([workspaceId])
+  @@index([timestamp])
+  @@map("audit_events")
+}
