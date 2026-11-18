@@ -20,12 +20,12 @@ const estimate = calculatePaymentSettlementEstimate({
   grossMinor: 1000000, // $10,000.00 in minor currency units (cents)
   currency: "USD",
   transactionTime: "2026-11-20T17:30:00Z",
-  acquirerId: "ACQ_JPMORGAN",
+  acquirerId: "ACQ_DEMO",
 }, {
   feeRules: [{
     id: "RULE_MDR",
     version: "1.0.0",
-    acquirerId: "ACQ_JPMORGAN",
+    acquirerId: "ACQ_DEMO",
     effectiveFrom: "2026-01-01T00:00:00Z",
     priority: 0,
     feeStructure: {
@@ -37,7 +37,7 @@ const estimate = calculatePaymentSettlementEstimate({
   settlementPolicies: [{
     id: "POLICY_T2",
     version: "1.0.0",
-    acquirerId: "ACQ_JPMORGAN",
+    acquirerId: "ACQ_DEMO",
     effectiveFrom: "2026-01-01",
     priority: 0,
     cycleLength: 2,
