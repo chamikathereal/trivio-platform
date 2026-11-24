@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
 import fs from 'node:fs';
 import path from 'node:path';
 import { PrismaClient } from '@prisma/client';
@@ -58,6 +58,11 @@ try {
 describe('Stage 4C.1: Real PostgreSQL Integration & Tenant Isolation', () => {
   it('verifies PostgreSQL connectivity and test environment status', () => {
     if (!isDbAvailable) {
+      if (process.env['CI'] || process.env['REQUIRE_DB'] === 'true') {
+        throw new Error(
+          `Mandatory PostgreSQL integration test failed: Database is unreachable at ${connectionString.replace(/:[^:@]+@/, ':***@')}. Real DB tests are mandatory in CI.`,
+        );
+      }
       console.warn('Skipping real PostgreSQL tests: PostgreSQL server is offline or unreachable.');
     }
     expect(true).toBe(true);
@@ -93,7 +98,7 @@ describe('Stage 4C.1: Real PostgreSQL Integration & Tenant Isolation', () => {
         // Cascade cleanup by removing created workspaces
         await prisma.workspace.deleteMany({
           where: {
-            slug: { in: [alphaSlug, betaSlug, `rollback-${testRunId}`] },
+            slug: { in: [alphaSlug, betaSlug, `rollback-${testRunId}`, `fail-audit-${testRunId}`] },
           },
         });
       } finally {
@@ -299,6 +304,32 @@ describe('Stage 4C.1: Real PostgreSQL Integration & Tenant Isolation', () => {
         where: { slug: rollbackSlug },
       });
       expect(orphaned).toBeNull();
+    });
+
+    it('verifies that an audit write failure inside the atomic transaction rolls back workspace and member creation', async () => {
+      const failingSlug = `fail-audit-${testRunId}`;
+      const mockFailingAudit = {
+        logEvent: vi.fn().mockRejectedValue(new Error('Simulated atomic audit failure')),
+        listEventsByWorkspace: vi.fn(),
+      } as unknown as AuditService;
+
+      const failingWorkspacesService = new WorkspacesService(
+        prisma as unknown as PrismaService,
+        mockFailingAudit,
+      );
+
+      await expect(
+        failingWorkspacesService.createWorkspace(`usr_audit_fail_${testRunId}`, {
+          name: 'Failing Audit Workspace',
+          slug: failingSlug,
+        }),
+      ).rejects.toThrow('Simulated atomic audit failure');
+
+      // Verify that neither the workspace nor any membership was committed to PostgreSQL
+      const orphanedWs = await prisma.workspace.findUnique({
+        where: { slug: failingSlug },
+      });
+      expect(orphanedWs).toBeNull();
     });
 
     // --------------------------------------------------------------------------

@@ -57,7 +57,14 @@ jobs:
       - name: Typecheck TypeScript
         run: npm run typecheck
 
-      - name: Run unit and integration tests
+      - name: Run mandatory PostgreSQL integration tests
+        run: npm run test:db
+        env:
+          DATABASE_URL: postgresql://postgres:postgrespassword@localhost:5432/trivio_test?schema=public
+          REQUIRE_DB: "true"
+
+      - name: Run all unit and integration tests
         run: npm test
         env:
           DATABASE_URL: postgresql://postgres:postgrespassword@localhost:5432/trivio_test?schema=public
+          REQUIRE_DB: "true"
