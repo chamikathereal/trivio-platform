@@ -19,8 +19,8 @@ export class WorkspacesService {
       throw new ConflictException(`Workspace slug '${dto.slug}' is already taken.`);
     }
 
-    return this.prisma.$transaction(async (tx) => {
-      const workspace = await tx.workspace.create({
+    const workspace = await this.prisma.$transaction(async (tx) => {
+      const createdWorkspace = await tx.workspace.create({
         data: {
           name: dto.name,
           slug: dto.slug,
@@ -42,23 +42,25 @@ export class WorkspacesService {
       // Assign actor as OWNER
       await tx.workspaceMember.create({
         data: {
-          workspaceId: workspace.id,
+          workspaceId: createdWorkspace.id,
           userId: actorId,
           role: 'OWNER',
         },
       });
 
-      await this.audit.logEvent({
-        workspaceId: workspace.id,
-        actorId,
-        action: 'WORKSPACE_CREATED',
-        entityType: 'Workspace',
-        entityId: workspace.id,
-        payload: { name: workspace.name, slug: workspace.slug },
-      });
-
-      return workspace;
+      return createdWorkspace;
     });
+
+    await this.audit.logEvent({
+      workspaceId: workspace.id,
+      actorId,
+      action: 'WORKSPACE_CREATED',
+      entityType: 'Workspace',
+      entityId: workspace.id,
+      payload: { name: workspace.name, slug: workspace.slug },
+    });
+
+    return workspace;
   }
 
   async findById(workspaceId: string) {
