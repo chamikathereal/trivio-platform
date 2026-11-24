@@ -80,6 +80,17 @@ export const REQUIRED_SECTIONS = [
 ];
 
 /**
+ * Normalizes a markdown heading title for section matching.
+ */
+export function normalizeHeadingTitle(title) {
+  return title
+    .replace(/^\d+[.)]\s*/, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .toLowerCase();
+}
+
+/**
  * Strips HTML comments from markdown text.
  */
 export function stripHtmlComments(text) {
@@ -155,7 +166,10 @@ export function validatePrDescription(body) {
 
   // Verify each required section
   for (const req of REQUIRED_SECTIONS) {
-    const matchedSection = headings.find((h) => req.pattern.test(`## ${h.title}`));
+    const matchedSection = headings.find((h) => {
+      const normalizedTitle = normalizeHeadingTitle(h.title);
+      return req.pattern.test(`## ${normalizedTitle}`);
+    });
 
     if (!matchedSection) {
       errors.push(`Missing required section: "${req.title}" (Section ${req.id})`);
