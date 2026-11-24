@@ -3,6 +3,7 @@ import {
   validatePrDescription,
   stripHtmlComments,
   isMeaningfulContent,
+  normalizeHeadingTitle,
   REQUIRED_SECTIONS,
 } from '../scripts/validate-pr-description.mjs';
 
@@ -125,6 +126,13 @@ describe('PR Description Validator (Stage 1.1)', () => {
     expect(result.errors).toHaveLength(0);
   });
 
+  it('accepts required sections when headings omit section numbers', () => {
+    const unnumberedSectionHeadingsPR = VALID_SAMPLE_PR.replace(/^## \d+\.\s/gm, '## ');
+    const result = validatePrDescription(unnumberedSectionHeadingsPR);
+    expect(result.valid).toBe(true);
+    expect(result.errors).toHaveLength(0);
+  });
+
   it('rejects an empty PR body', () => {
     const result = validatePrDescription('');
     expect(result.valid).toBe(false);
@@ -223,6 +231,11 @@ describe('PR Description Validator (Stage 1.1)', () => {
   });
 
   describe('Helper utilities', () => {
+    it('normalizes numbered heading titles for section matching', () => {
+      expect(normalizeHeadingTitle('10. Risks and Limitations')).toBe('risks and limitations');
+      expect(normalizeHeadingTitle('Next Steps')).toBe('next steps');
+    });
+
     it('correctly strips HTML comments from text', () => {
       const input = 'Header <!-- comment here --> and content <!-- another comment -->';
       expect(stripHtmlComments(input)).toBe('Header  and content');
